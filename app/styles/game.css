@@ -1,0 +1,11 @@
+#gameCanvas {
+  display: block;
+  margin: auto;
+  border-style: solid;
+  border-width: 1px;
+}
+
+@font-face {
+  font-family: "Minecraftia";
+  src: url("/fonts/Minecraftia.ttf");
+}

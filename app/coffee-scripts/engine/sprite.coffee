@@ -1,0 +1,55 @@
+class Engine.Sprite
+  constructor: (@texture) ->
+    @width = texture.width
+    @height = texture.height
+    @location = x: 0, y: 0
+    @pivot = x: 0, y: 0
+    @opacity = 1
+
+  draw: (context, offsetX = 0, offsetY = 0) ->
+    context.save()
+    context.globalAlpha = @opacity
+
+    switch @align
+      when "top-left", "left-top" then @pivot = x: 0, y: 0
+      when "top-right", "right-top" then @pivot = x: @width, y: 0
+      when "bottom-left", "left-bottom" then @pivot = x: 0, y: @height
+      when "bottom-right", "right-bottom" then @pivot = x: @width, y: @height
+      when "middle", "center" then @pivot = x: @width / 2, y: @height / 2
+      when "left" then @pivot = x: 0, y: @height / 2
+      when "top" then @pivot = x: @width / 2, y: 0
+      when "right" then @pivot = x: @width, y: @height / 2
+      when "bottom" then @pivot = x: @width / 2, y: @height
+
+    context.drawImage @texture,
+      @location.x - @pivot.x + offsetX
+      @location.y - @pivot.y + offsetY
+      @width
+      @height
+
+    context.restore()
+
+  setPercentage: (keys, relative, percents, adapters) ->
+    prop = @
+
+    if keys instanceof Array
+      key = keys.pop()
+      keys.forEach (k) -> prop = prop[k]
+      keys.push key
+    else
+      key = keys
+
+    oldVal = prop[key]
+    newVal = prop[key] = percents * relative / 100
+    return unless adapters?
+
+    prop = @
+
+    if adapters instanceof Array
+      adapter = adapters.pop()
+      adapters.forEach (k) -> prop = prop[k]
+      adapters.push adapter
+    else
+      adapter = adapters
+
+    prop[adapter] *= newVal / oldVal
