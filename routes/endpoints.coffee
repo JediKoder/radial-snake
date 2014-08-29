@@ -3,35 +3,35 @@ module.exports = [
   path: "/scripts/{path*}"
   handler: 
     directory: 
-      path: "./app/scripts/"
+      path: "./resources/scripts/"
 ,
   method: "GET"
   path: "/styles/{path*}"
   handler: 
     directory: 
-      path: "./app/styles/"
+      path: "./resources/styles/"
 ,
   method: "GET"
   path: "/libs/{path*}"
   handler: 
     directory: 
-      path: "./app/libs/"
+      path: "./resources/libs/"
 ,
   method: "GET"
   path: "/images/{path*}"
   handler:
     directory:
-      path: "./app/images/"
+      path: "./resources/images/"
 ,
   method: "GET"
   path: "/textures/{path*}"
   handler: 
     directory: 
-      path: "./app/assets/textures/"
+      path: "./resources/assets/textures/"
 ,
   method: "GET"
   path: "/fonts/{path*}"
   handler: 
     directory: 
-      path: "./app/assets/fonts/"
+      path: "./resources/assets/fonts/"
 ]

@@ -1,11 +1,11 @@
 build:
-	coffee -o ./app/scripts -c ./app/coffee-scripts
+	coffee -o ./resources/scripts -c ./resources/coffee-scripts
 
 build-watch:
-	coffee -o ./app/scripts -cw ./app/coffee-scripts
+	coffee -o ./resources/scripts -cw ./resources/coffee-scripts
 
 run:
-	coffee app.coffee
+	coffee server.coffee
 
 run-watch:
-	nodemon app.coffee
+	nodemon server.coffee
