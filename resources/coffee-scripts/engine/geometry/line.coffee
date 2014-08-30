@@ -27,14 +27,17 @@ class Engine.Geometry.Line
 
   getX: (y) ->
     x = (y - @y1) * (@x2 - @x1) / (@y2 - @y1) + @x1
-    x if x.isBetween @x1, @x2
+    x if isNaN(x) or x.isBetween(@x1, @x2, yes)
 
   getY: (x) ->
     y = (x - @x1) * (@y2 - @y1) / (@x2 - @x1) + @y1
-    y if y.isBetween @y1, @y2
+    y if isNaN(y) or y.isBetween(@y1, @y2, yes)
 
   hasPoint: (p) ->
-    p.y is @getY p.x
+    x = @getX p.y
+    y = @getY p.x
+    ((isNaN(x) and p.x.isBetween @x1, @x2, yes) or x?.compare(p.x)) and
+    ((isNaN(y) and p.y.isBetween @y1, @y2, yes) or y?.compare(p.y))
 
   getLineIntersection: (l) ->
     return unless (@x1 - @x2) * (l.y1 - l.y2) - (@y1 - @y2) * (l.x1 - l.x2)
@@ -44,23 +47,34 @@ class Engine.Geometry.Line
     y = ((@x1 * @y2 - @y1 * @x2) * (l.y1 - l.y2) - (l.y1 - l.y2) * (l.x1 * l.y2 - l.y1 * l.x2)) /
         ((@x1 - @x2) * (l.y1 - l.y2) - (@y1 - @y2) * (l.x1 - l.x2))
 
-    x: x, y: y if x.isBetween(@x1, @x2) and x.isBetween(l.x1, l.x2)
+    x: x, y: y if x.isBetween(@x1, @x2, yes) and x.isBetween(l.x1, l.x2, yes)
 
   getCircleIntersection: (c) ->
-    dx = @x2 - @x1
-    dy = @y2 - @y1
+    x1 = @x1 - c.x
+    x2 = @x2 - c.x
+    y1 = @y1 - c.y
+    y2 = @y2 - c.y
+    dx = x2 - x1
+    dy = y2 - y1
     d = Math.sqrt Math.pow(dx, 2) + Math.pow(dy, 2)
-    h = @x1 * @y2 - @x2 * @y1
+    h = x1 * y2 - x2 * y1
     delta = Math.pow(c.r, 2) * Math.pow(d, 2) - Math.pow(h, 2)
 
     return if delta < 0
 
     interPoints = [
-      x: (h * dy + (dy / Math.abs(dy)) * dx * Math.sqrt(delta)) / Math.pow(d, 2)
-      y: (-h * dx + Math.abs(dy) * Math.sqrt(delta)) / Math.pow(d, 2)
+      x: (h * dy + (dy / Math.abs(dy)) * dx * Math.sqrt(delta)) / Math.pow(d, 2) + c.x
+      y: (-h * dx + Math.abs(dy) * Math.sqrt(delta)) / Math.pow(d, 2) + c.y
     ,
-      x: (h * dy - (dy / Math.abs(dy)) * dx * Math.sqrt(delta)) / Math.pow(d, 2)
-      y: (-h * dx - Math.abs(dy) * Math.sqrt(delta)) / Math.pow(d, 2)
-    ].filter (p) => @hasPoint p
+      x: (h * dy - (dy / Math.abs(dy)) * dx * Math.sqrt(delta)) / Math.pow(d, 2) + c.x
+      y: (-h * dx - Math.abs(dy) * Math.sqrt(delta)) / Math.pow(d, 2) + c.y
+    ]
+
+    interPoints = interPoints.filter (p) => 
+      @hasPoint(p) and
+      c.hasPoint(p)
+
+    interPoints = _.uniq interPoints, (p) -> 
+      "(#{p.x}, #{p.y})"
 
     interPoints if interPoints.length > 0

@@ -19,13 +19,8 @@ Object.defineProperties self,
     get: ->
       arguments.callee.caller
 
-Number::isBetween = ->
-  if args[0] instanceof Array
-    range = args[0]
-  else
-    range = [args[0], args[1]]
-
-  isFloat = _.last args
+Number::isBetween = (num1, num2, isFloat) ->
+  range = [num1, num2]
   min = _.min range
   max = _.max range
 
@@ -39,7 +34,7 @@ Number::compare = (f, method) ->
   switch method
     when "<" then this <= f + Number.EPSILON
     when ">" then this >= f - Number.EPSILON
-    else Math.abs(this - f) < Number.EPSILON
+    else Math.abs(this - f) <= Number.EPSILON
 
 Array::common = (iterator) ->
   common = []

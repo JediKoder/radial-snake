@@ -71,3 +71,43 @@ describe "Engine.Geometry.Circle class", ->
       it "return nothing", ->
         circle = new Engine.Geometry.Circle 1, 1, 2, [0, 2 * Math.PI]
         expect(@circle.getCircleIntersection(circle)).toBeUndefined()
+
+  describe "getLineIntersection method", ->
+    describe "given line with 2 intersection points", ->
+      it "returns array with intersection points", ->
+        line = new Engine.Geometry.Line(
+          { x: -10, y: 1 }
+          { x: 10, y: 1 }
+        )
+        expect(@circle.getLineIntersection(line)).toEqual [
+          { x: 6, y: 1 }
+          { x: -4, y: 1 }
+        ]
+
+    describe "given line with 1 intersection point", ->
+      it "returns array with intersection point", ->
+        line = new Engine.Geometry.Line(
+          { x: -10, y: 1 }
+          { x: 1, y: 1 }
+        )
+        expect(@circle.getLineIntersection(line)).toEqual [
+          { x: -4, y: 1 }
+        ]
+
+    describe "given kissing line", ->
+      it "returns array with intersection point", ->
+        line = new Engine.Geometry.Line(
+          { x: -10, y: 6 }
+          { x: 10, y: 6 }
+        )
+        expect(@circle.getLineIntersection(line)).toEqual [
+          { x: 1, y: 6 }
+        ]
+
+    describe "given outranged line", ->
+      it "returns nothing", ->
+        line = new Engine.Geometry.Line(
+          { x: -10, y: 10 }
+          { x: 10, y: 10 }
+        )
+        expect(@circle.getLineIntersection(line)).toBeUndefined()
