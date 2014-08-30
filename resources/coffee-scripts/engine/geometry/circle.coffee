@@ -1,21 +1,33 @@
 class Engine.Geometry.Circle
-  constructor: (@x = 0, @y = 0, @r, @rads = rads = []) ->
-    unless r?
-      throw new Error "r must be defined for Circle"
+  constructor: (@x, @y, @r, rads) ->
+    @rads = [
+      rads[0] % (2 * Math.PI)
+      rads[1] - 2 * Math.PI * parseInt(rads[0] / (2 * Math.PI))
+    ]
 
-    rads.push 0 * Math.PI unless rads[0]?
-    rads.push 2 * Math.PI unless rads[1]?
+    Object.defineProperties this,
+      rad1: 
+        get: -> 
+          @rads[0]
+        set: (v) -> 
+          @rads[0] = v
+      ,
+      rad2: 
+        get: -> 
+          @rads[1]
+        set: (v) -> 
+          @rads[1] = v
 
   getX: (rad) ->
-    return unless rad.isInRange @rads, yes
+    return unless rad.isBetween @rads, yes
     @r * Math.cos(rad) + @x
 
   getY: (rad) ->
-    return unless rad.isInRange @rads, yes
+    return unless rad.isBetween @rads, yes
     @r * Math.sin(rad) + @y
 
   getPoint: (rad) ->
-    return unless rad.isInRange @rads, yes
+    return unless rad.isBetween @rads, yes
     x: @getX rad
     y: @getY rad
 
@@ -29,16 +41,12 @@ class Engine.Geometry.Circle
       Math.PI - r
     ].common()[0]
 
-    rad if rad.isInRange @rads, yes
+    rad if rad?.isBetween @rads, yes
 
-  hasPoint: (p) ->
-    @getRad(p)? and
-    Math.pow(@r, 2) is Math.pow(p.x - @x, 2) + Math.pow(p.y - @y, 2)
+  hasPoints: (p) ->
+    @getRad(p)?
 
-  getCircleIntersect: (c) ->
-    if @x is c.x and @y is c.y and @r is c.r
-      return @getPartial c.rads
-
+  getCircleIntersection: (c) ->
     dx = c.x - @x
     dy = c.y - @y
     d = Math.sqrt Math.pow(dx, 2) + Math.pow(dy, 2)
@@ -47,53 +55,42 @@ class Engine.Geometry.Circle
        d < Math.abs(@r - c.r)
       return
 
-    ###
-    Point2 is where the line through the circle intersection points 
-    crosses the line between circle centers
-    ###
-
-    # Distance between point 0 and point 2
     a = (Math.pow(@r, 2) - Math.pow(c.r, 2) + Math.pow(d, 2)) / (2 * d)
-
-    # Coordinates of point 2
     x = @x + dx * a / d
     y = @y + dy * a / d
-    # Distance from point 2 to one of the intersection points
     h = Math.sqrt Math.pow(@r, 2) - Math.pow(a, 2)
-    # The offset of the intersection points
     rx = - dy * h / d
     ry = dx * h / d
 
-    # Absolute intersection points
     interPoints = _.uniq [
       x: x + rx
       y: y + ry
     ,
       x: x - rx
       y: y - ry
-    ]
-
-    if _.isEqual interPoints[0], interPoints[1]
-      interPoints.pop()
+    ], (p) -> "(#{p.x}, #{p.y})"
 
     [this, c].forEach (c) ->
-      return unless c.rads?
-      interPoints = interPoints.filter (p) =>
-        c.getRad(p)?
+      interPoints = interPoints.filter (p) ->
+        c.hasPoints p
 
-    interPoints
+    interPoints if interPoints.length > 0
 
-  getPartial: (rads) ->
-    commonRads = []
+  getLineIntersection: (l) ->
+    dx = l.x2 - l.x1
+    dy = l.y2 - l.y1
+    d = Math.sqrt Math.pow(dx, 2) + Math.pow(dy, 2)
+    h = l.x1 * l.y2 - l.x2 * l.y1
+    delta = Math.pow(@r, 2) * Math.pow(d, 2) - Math.pow(h, 2)
 
-    [0..1].forEach =>
-      rads.forEach (r) =>
-        if (p = @getPoint(r))? and @getRad(p)?
-          commonRads.push r
+    return if delta < 0
 
-      radsBack = @rads
-      @rads = rads
-      rads = radsBack
+    interPoints = [
+      x: (h * dy + (dy / Math.abs(dy)) * dx * Math.sqrt(delta)) / Math.pow(d, 2)
+      y: (-h * dx + Math.abs(dy) * Math.sqrt(delta)) / Math.pow(d, 2)
+    ,
+      x: (h * dy - (dy / Math.abs(dy)) * dx * Math.sqrt(delta)) / Math.pow(d, 2)
+      y: (-h * dx - Math.abs(dy) * Math.sqrt(delta)) / Math.pow(d, 2)
+    ].filter (p) => @hasPoints p
 
-    if commonRads.length > 0
-      new @constructor @x, @y, @r, commonRads
+    interPoints of interPoints.length > 0

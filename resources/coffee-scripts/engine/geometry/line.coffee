@@ -1,102 +1,66 @@
 class Engine.Geometry.Line
-  constructor: ->
-    if args.length is 1 or 
-       args[1] instanceof Array
-      [x, limits] = args
-      @x = x || 0
-    else
-      [m, n, limits] = args
-      @m = m || 0
-      @n = n || 0
-        
-    @limits = limits || []
-    [@xLimits = _.pluck limits, "x"
-     @yLimits = _.pluck limits, "y"]
-    
-    .forEach (limits) ->
-      limits.push -Infinity unless limits[0]?
-      limits.push Infinity unless limits[1]?
+  constructor: (@p1, @p2) ->
+    Object.defineProperties this,
+      x1: 
+        get: -> 
+          @p1.x
+        set: (v) -> 
+          @p1.x = v
+      ,
+      x2: 
+        get: -> 
+          @p2.x
+        set: (v) -> 
+          @p2.x = v
+      ,
+      y1: 
+        get: -> 
+          @p1.y
+        set: (v) -> 
+          @p1.y = v
+      ,
+      y2: 
+        get: ->
+          @p2.y
+        set: (v) -> 
+          @p2.y = v
 
   getX: (y) ->
-    x =
-      if @x?
-        @x
-      else if @m is 0
-        NaN
-      else
-        (y - @n) / @m
-
-    x if x.isInRange @xLimits
+    x = (y - @y1) * (@x2 - @x1) / (@y2 - @y1) + @x1
+    x if x.isBetween @x1, @x2
 
   getY: (x) ->
-    y =
-      if @x?
-        NaN
-      else
-        @m * x + @n
-
-    y if y.isInRange @yLimits
+    y = (x - @x1) * (@y2 - @y1) / (@x2 - @x1) + @y1
+    y if y.isBetween @y1, @y2
 
   hasPoint: (p) ->
-    @isPointInLimits(p) and
-    (@x is p.x or @m * p.x + @n is p.y)
+    p.y is @getY p.x
 
-  isPointInLimits: (p) ->
-    p.x? and p.y? and
-    p.x.isInRange(@xLimits) and
-    p.y.isInRange(@yLimits)
+  getLineIntersection: (l) ->
+    return unless (@x1 - @x2) * (l.y1 - l.y2) - (@y1 - @y2) * (l.x1 - l.x2)
 
-  getLineIntersect: (l) ->
-    if @x?
-      if l.x?
-        if @x is l.x
-          return @getPartial l.limits
-      else
-        interPoint =
-          x: @x
-          y: l.getY @x
-    else if l.x?
-      interPoint =
-        x: l.x
-        y: @getY l.x
-    else if @m is l.m
-      if @n is l.n
-        return @getPartial l.limits
-    else
-      interPoint =
-        x: x = (l.n - @n) / (@m - l.m)
-        y: y = @getY x
+    x = ((@x1 * @y2 - @y1 * @x2) * (l.x1 - l.x2) - (@x1 - @x2) * (l.x1 * l.y2 - l.y1 * l.x2)) / 
+        ((@x1 - @x2) * (l.y1 - l.y2) - (@y1 - @y2) * (l.x1 - l.x2))
+    y = ((@x1 * @y2 - @y1 * @x2) * (l.y1 - l.y2) - (l.y1 - l.y2) * (l.x1 * l.y2 - l.y1 * l.x2)) /
+        ((@x1 - @x2) * (l.y1 - l.y2) - (@y1 - @y2) * (l.x1 - l.x2))
 
-    [this, l].forEach (l) ->
-      return unless interPoint?
-      interPoint = undefined unless l.isPointInLimits interPoint
+    x: x, y: y if x.isBetween(@x1, @x2) and x.isBetween(l.x1, l.x2)
 
-    interPoint
+  getCircleIntersection: (c) ->
+    dx = @x2 - @x1
+    dy = @y2 - @y1
+    d = Math.sqrt Math.pow(dx, 2) + Math.pow(dy, 2)
+    h = @x1 * @y2 - @x2 * @y1
+    delta = Math.pow(c.r, 2) * Math.pow(d, 2) - Math.pow(h, 2)
 
-  getPartial: (limits) ->
-    commonLimits = []
+    return if delta < 0
 
-    [0..1].forEach =>
-      limits.forEach (l) =>
-        commonLimits.push l if @isPointInLimits l
+    interPoints = [
+      x: (h * dy + (dy / Math.abs(dy)) * dx * Math.sqrt(delta)) / Math.pow(d, 2)
+      y: (-h * dx + Math.abs(dy) * Math.sqrt(delta)) / Math.pow(d, 2)
+    ,
+      x: (h * dy - (dy / Math.abs(dy)) * dx * Math.sqrt(delta)) / Math.pow(d, 2)
+      y: (-h * dx - Math.abs(dy) * Math.sqrt(delta)) / Math.pow(d, 2)
+    ].filter (p) => @hasPoint p
 
-      limitsBackup = @limits
-      @limits = limits
-      @xLimits = _.pluck limits, "x"
-      @yLimits = _.pluck limits, "y"
-      limits = limitsBackup
-
-    if commonLimits.length > 0
-      if @x?
-        new @constructor @x, commonLimits
-      else
-        new @constructor @m, @n, commonLimits
-
-  @getLine: (p0, p1) ->
-    m = (p0.y - p1.y) / (p0.x - p1.x)
-    n = p0.y - m * p0.x
-
-    if isFinite m
-      new this m, n
-    else
-      new this p0.x
+    interPoints if interPoints.length > 0

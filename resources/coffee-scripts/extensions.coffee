@@ -19,17 +19,23 @@ Object.defineProperties self,
     get: ->
       arguments.callee.caller
 
-Number::isInRange = (range, isFloat) ->
+Number::isBetween = ->
+  if args[0] instanceof Array
+    range = args[0]
+  else
+    range = [args[0], args[1]]
+
+  isFloat = _.last args
   min = _.min range
   max = _.max range
 
   if isFloat
-    this.floatCompare(min, ">") and
-    this.floatCompare(max, "<")
+    this.compare(min, ">") and
+    this.compare(max, "<")
   else
     this >= min and this <= max
 
-Number::floatCompare = (f, method) ->
+Number::compare = (f, method) ->
   switch method
     when "<" then this <= f + Number.EPSILON
     when ">" then this >= f - Number.EPSILON
