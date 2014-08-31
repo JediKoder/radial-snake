@@ -47,7 +47,9 @@ class Engine.Geometry.Line
     y = ((@x1 * @y2 - @y1 * @x2) * (l.y1 - l.y2) - (l.y1 - l.y2) * (l.x1 * l.y2 - l.y1 * l.x2)) /
         ((@x1 - @x2) * (l.y1 - l.y2) - (@y1 - @y2) * (l.x1 - l.x2))
 
-    x: x, y: y if x.isBetween(@x1, @x2, yes) and x.isBetween(l.x1, l.x2, yes)
+    if x.isBetween(@x1, @x2, yes) and x.isBetween(l.x1, l.x2, yes) and
+       y.isBetween(@y1, @y2, yes) and y.isBetween(l.y1, l.y2, yes)
+      x: x, y: y
 
   getCircleIntersection: (c) ->
     Engine.Geometry.Circle::getLineIntersection.call c, this
