@@ -50,31 +50,4 @@ class Engine.Geometry.Line
     x: x, y: y if x.isBetween(@x1, @x2, yes) and x.isBetween(l.x1, l.x2, yes)
 
   getCircleIntersection: (c) ->
-    x1 = @x1 - c.x
-    x2 = @x2 - c.x
-    y1 = @y1 - c.y
-    y2 = @y2 - c.y
-    dx = x2 - x1
-    dy = y2 - y1
-    d = Math.sqrt Math.pow(dx, 2) + Math.pow(dy, 2)
-    h = x1 * y2 - x2 * y1
-    delta = Math.pow(c.r, 2) * Math.pow(d, 2) - Math.pow(h, 2)
-
-    return if delta < 0
-
-    interPoints = [
-      x: (h * dy + (dy / Math.abs(dy)) * dx * Math.sqrt(delta)) / Math.pow(d, 2) + c.x
-      y: (-h * dx + Math.abs(dy) * Math.sqrt(delta)) / Math.pow(d, 2) + c.y
-    ,
-      x: (h * dy - (dy / Math.abs(dy)) * dx * Math.sqrt(delta)) / Math.pow(d, 2) + c.x
-      y: (-h * dx - Math.abs(dy) * Math.sqrt(delta)) / Math.pow(d, 2) + c.y
-    ]
-
-    interPoints = interPoints.filter (p) => 
-      @hasPoint(p) and
-      c.hasPoint(p)
-
-    interPoints = _.uniq interPoints, (p) -> 
-      "(#{p.x}, #{p.y})"
-
-    interPoints if interPoints.length > 0
+    Engine.Geometry.Circle::getLineIntersection.call c, this
