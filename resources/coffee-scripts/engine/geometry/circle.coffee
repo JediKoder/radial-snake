@@ -36,10 +36,10 @@ class Engine.Geometry.Circle
       Math.PI - r
     ]
 
-    rad = rad.common (a, b) ->
+    .common (a, b) ->
       a.compare b
 
-    rad = rad.filter (r) ->
+    .filter (r) ->
       r >= 0 and r <= 2 * Math.PI
 
     rad = rad[0]
@@ -68,13 +68,16 @@ class Engine.Geometry.Circle
     rx = - dy * h / d
     ry = dx * h / d
 
-    interPoints = _.uniq [
+    interPoints = [
       x: x + rx
       y: y + ry
     ,
       x: x - rx
       y: y - ry
-    ], (p) -> "(#{p.x}, #{p.y})"
+    ]
+
+    interPoints = _.uniq interPoints, (p) ->
+      "(#{p.x}, #{p.y})"
 
     [this, c].forEach (c) ->
       interPoints = interPoints.filter (p) ->
@@ -103,11 +106,11 @@ class Engine.Geometry.Circle
       y: (-h * dx - Math.abs(dy) * Math.sqrt(delta)) / Math.pow(d, 2) + @y
     ]
 
-    interPoints = interPoints.filter (p) => 
+    .filter (p) => 
       @hasPoint(p) and
       l.hasPoint(p)
 
-    interPoints = _.uniq interPoints, (p) -> 
+    interPoints = _.uniq interPoints, (p) ->
       "(#{p.x}, #{p.y})"
 
     interPoints if interPoints.length > 0

@@ -19,6 +19,26 @@ Object.defineProperties self,
     get: ->
       arguments.callee.caller
 
+Object::getProperty = (keys...) ->
+  prop = this
+
+  keys.forEach (k) ->
+    prop = prop[k]
+
+  prop
+
+Array::common = (iterator) ->
+  common = []
+
+  for i in [0...@length]
+    for j in [i + 1...@length]
+      if iterator?
+        common.push @[j] if iterator @[j], @[i]
+      else
+        common.push @[j] if @[j] is @[i]
+
+  common
+
 Number::isBetween = (num1, num2, isFloat) ->
   range = [num1, num2]
   min = _.min range
@@ -35,15 +55,3 @@ Number::compare = (f, method) ->
     when "<" then this <= f + Number.EPSILON
     when ">" then this >= f - Number.EPSILON
     else Math.abs(this - f) <= Number.EPSILON
-
-Array::common = (iterator) ->
-  common = []
-
-  for i in [0...@length]
-    for j in [i + 1...@length]
-      if iterator?
-        common.push @[j] if iterator @[j], @[i]
-      else
-        common.push @[j] if @[j] is @[i]
-
-  common
