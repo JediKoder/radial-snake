@@ -1,3 +1,4 @@
+# TODO: Create StatableScreen parent class
 class SnakeOnline.Screens.Game extends Engine.Screen
   constructor: (game) ->
     super game
@@ -11,38 +12,45 @@ class SnakeOnline.Screens.Game extends Engine.Screen
     super context
 
     switch @state
-      when "ready"
-        @readyText.draw context
+      when "ready" then @drawReady context
+      when "play" then break
 
-      when "play"
-        # TODO: Insert play draw logic
-        break
-
-  update: ->
+  update: (span) ->
     switch @state
-      when "ready"
-        @setState "play" if @ready
-
-      when "play"
-        # TODO: Insert play update logic
-        break
-
-    this
+      when "ready" then @updateReady span
+      when "play" then break
 
   setState: (state) ->
     switch @state
-      when "ready"
-        @game.removeEventListener "keydown", @onReadyKeyDown
+      when "ready" then @setReadyState()
+      when "play" then break
 
     switch state
-      when "ready"
-        @game.addEventListener "keydown", @onReadyKeyDown, this
-
-      when "play"
-        # TODO: Insert play state logic
-        break
+      when "ready" then @unsetReadyState()
+      when "play" then break
 
     @state = state
 
+  ###
+  READY
+  ###
+
+  drawReady: (context) ->
+    @readyText.draw context
+
+  updateReady: (span) ->
+    @setState "play" if @ready
+    this
+
+  setReadyState: ->
+    @game.removeEventListener "keydown", @onReadyKeyDown
+
+  unsetReadyState: ->
+    @game.addEventListener "keydown", @onReadyKeyDown, this
+
   onReadyKeyDown: ->
     @ready = yes
+
+  ###
+  PLAY
+  ###

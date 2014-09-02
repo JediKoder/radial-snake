@@ -7,14 +7,16 @@ class SnakeOnline.Game
     canvas.height = 720
     canvas.focus()
 
-    canvas.addEventListener "mousedown", canvas.focus, false
-    canvas.addEventListener "keydown", ((e) -> e.preventDefault()), false
+    canvas.addEventListener "mousedown", canvas.focus, no
+    canvas.addEventListener "keydown", @onKeyDown.bind(this), no
+    canvas.addEventListener "keyup", @onKeyUp.bind(this), no
 
     @context = canvas.getContext "2d"
     @bufferedCanvas = document.createElement "canvas"
     @bufferedContext = @bufferedCanvas.getContext "2d"
     @bufferedCanvas.width = canvas.width
     @bufferedCanvas.height = canvas.height
+    @keyStates = new Engine.KeyStates
     @screen = new SnakeOnline.Screens.SplashLoading this
     @lastUpdate = new Date
     @events = []
@@ -67,11 +69,19 @@ class SnakeOnline.Game
       listener: listener
       bindedListener: bindedListener
 
-    @canvas.addEventListener type, bindedListener, false
+    @canvas.addEventListener type, bindedListener, no
 
   removeEventListener: (type, listener) ->
     event = _.find @events, (e) ->
       e.listener is listener
 
     @events = _.without @events, event
-    @canvas.removeEventListener type, event.bindedListener, false
+    @canvas.removeEventListener type, event.bindedListener, no
+
+  onKeyDown: (e) ->
+    e.preventDefault()
+    @keyStates.add e.keyCode
+
+  onKeyUp: (e) ->
+    e.preventDefault()
+    @keyStates.add e.keyCode
