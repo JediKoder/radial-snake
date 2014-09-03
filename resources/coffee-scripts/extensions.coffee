@@ -27,6 +27,11 @@ Object::getProperty = (keys...) ->
 
   prop
 
+Object::forEach = (iterator) ->
+  for k, v of this
+    if @hasOwnProperty(k)
+      iterator k, v, this
+
 Array::common = (iterator) ->
   common = []
 
@@ -40,9 +45,8 @@ Array::common = (iterator) ->
   common
 
 Number::isBetween = (num1, num2, isFloat) ->
-  range = [num1, num2]
-  min = _.min range
-  max = _.max range
+  min = Math.min num1, num2
+  max = Math.max num1, num2
 
   if isFloat
     this.compare(min, ">") and

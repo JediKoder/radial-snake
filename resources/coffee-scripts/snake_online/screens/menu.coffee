@@ -1,4 +1,7 @@
 class SnakeOnline.Screens.Menu extends Engine.Screen
+  events:
+    "keydown": "onKeyDown"
+
   constructor: (game, assets) ->
     super game
     @logoSprite = new Engine.Sprite assets.logoTexture
@@ -31,12 +34,6 @@ class SnakeOnline.Screens.Menu extends Engine.Screen
     else
       @instructionsAnim.update span
       this
-
-  addEventListeners: ->
-    @game.addEventListener "keydown", @onKeyDown, this
-
-  removeEventListeners: ->
-    @game.removeEventListener "keydown", @onKeyDown
 
   onKeyDown: (e) ->
     @keyPressed = true

@@ -2,7 +2,7 @@ class SnakeOnline.Game
   fps: 60
   speed: 1
 
-  constructor: (@canvas, @debugging) ->
+  constructor: (@canvas, Screen, @debugging) ->
     canvas.width = 1280
     canvas.height = 720
     canvas.focus()
@@ -17,9 +17,11 @@ class SnakeOnline.Game
     @bufferedCanvas.width = canvas.width
     @bufferedCanvas.height = canvas.height
     @keyStates = new Engine.KeyStates
-    @screen = new SnakeOnline.Screens.SplashLoading this
+    @screen = new Screen this
     @lastUpdate = new Date
     @events = []
+
+    @screen.addEventListeners()
 
   draw: ->
     if @debugging
@@ -44,7 +46,13 @@ class SnakeOnline.Game
     lastUpdate = @lastUpdate
     currUpdate = @lastUpdate = new Date
     span = currUpdate.getTime() - lastUpdate.getTime()
-    @screen = @screen.update span / @speed
+    newScreen = @screen.update span / @speed
+    return if newScreen.creationDate is @screen.creationDate
+
+    @screen.removeEventListeners()
+    newScreen.addEventListeners()
+    @screen = newScreen
+
 
   loop: ->
     return unless @playing

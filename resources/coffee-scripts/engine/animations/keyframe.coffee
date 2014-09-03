@@ -7,8 +7,7 @@ class Engine.Animations.Keyframe
     @lastFrame = @lastKeyframe.frame
     @sprite = new Engine.Sprite texture
 
-    _.keys(options).forEach (k) =>
-      option = options[k]
+    options.forEach (k, option) =>
       property = @sprite[k]
 
       if typeof property is "function"
@@ -19,8 +18,7 @@ class Engine.Animations.Keyframe
       else
         @sprite[k] = option
 
-    _.keys(keyframes[0]).forEach (k) =>
-      option = keyframes[0][k]
+    keyframes[0].forEach (k, option) =>
       property = @sprite[k]
 
       if typeof property is "object"
