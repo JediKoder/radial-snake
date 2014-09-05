@@ -12,9 +12,17 @@ class Engine.Screen
     context.fill()
 
   addEventListeners: ->
-    @events?.forEach (k, v) =>
-      @game.addEventListener k, @[v], this
+    @events?.forEach (event) =>
+      @game.addEventListener event, @getEventListener(event), this
 
   removeEventListeners: ->
-    @events?.forEach (k, v) =>
-      @game.removeEventListener k, @[v]
+    @events?.forEach (event) =>
+      @game.removeEventListener event, @getEventListener(event)
+
+  getEventListener: (event) ->
+    listener = @events[event]
+
+    if typeof listener is "function"
+      listener
+    else
+      @[listener]

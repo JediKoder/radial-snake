@@ -3,9 +3,6 @@ class SnakeOnline.Screens.SplashLoading extends Engine.Screen
     super game
     @load()
 
-  draw: (context) ->
-    super context
-
   update: (span) ->
     if @loaded
       new SnakeOnline.Screens.Splash @game, @assets

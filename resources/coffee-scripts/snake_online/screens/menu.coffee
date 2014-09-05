@@ -30,7 +30,7 @@ class SnakeOnline.Screens.Menu extends Engine.Screen
   update: (span) ->
     if @keyPressed
       @removeEventListeners()
-      new SnakeOnline.Screens.Game @game
+      new SnakeOnline.Screens.Game @game, "ready"
     else
       @instructionsAnim.update span
       this

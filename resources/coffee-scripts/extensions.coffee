@@ -32,6 +32,14 @@ Object::forEach = (iterator) ->
     if @hasOwnProperty(k)
       iterator k, v, this
 
+Object::map = (iterator) ->
+  map = []
+
+  @forEach (k, v, obj) ->
+    map.push iterator(k, v, obj)
+
+  map
+
 Array::common = (iterator) ->
   common = []
 
