@@ -7,7 +7,7 @@ getGame = (req, rep) ->
   Permitter.page file, permissions, req, rep
 
 getSpecRunner = (req, rep) ->
-  file = "./views/game.html"
+  file = "./views/spec_runner.html"
   permissions = []
   Permitter.page file, permissions, req, rep
 

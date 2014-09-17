@@ -6,7 +6,7 @@ exports.page = (file, permissions, req, rep) ->
   name = file.match(/\/[^\/]*\.html$/)[0]
   name = name.substr(1, name.length - 6).replace /_/g, " "
   remoteAddress = req.info.remoteAddress
-  
+
   console.log new Date
   console.log "#{remoteAddress} is trying to get #{name} page"
 
@@ -18,6 +18,6 @@ exports.page = (file, permissions, req, rep) ->
     rep error
   else
     console.log "permission granted"
-    rep.file "./views/game.html"
+    rep.file file
 
   console.log()
