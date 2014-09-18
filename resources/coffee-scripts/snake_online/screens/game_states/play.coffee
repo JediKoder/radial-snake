@@ -1,18 +1,39 @@
 SnakeOnline.Screens.Game::playState =
   initialize: ->
-    @snake = new SnakeOnline.Entities.Snake(
-      @width / 2
-      @height / 2
-      50
-      0
-      100
-      "red"
-      @keyStates
-    )
+    @snakes = [
+      new SnakeOnline.Entities.Snake(
+        @width / 2 - @width / 3
+        @height / 2
+        50
+        0
+        100
+        "red"
+        @keyStates
+        keys:
+          left: 37
+          right: 39
+      )
+
+      new SnakeOnline.Entities.Snake(
+        @width / 2 + @width / 3
+        @height / 2
+        50
+        Math.PI
+        100
+        "azure"
+        @keyStates
+        keys:
+          left: 65
+          right: 68
+      )
+    ]
 
   draw: (context) ->
-    @snake.draw context
+    @snakes.forEach (snake) ->
+      snake.draw context
 
   update: (span) ->
-    @snake.update span
+    @snakes.forEach (snake) ->
+      snake.update span
+
     this

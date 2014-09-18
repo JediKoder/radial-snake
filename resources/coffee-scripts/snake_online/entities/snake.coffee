@@ -13,8 +13,8 @@ class SnakeOnline.Entities.Snake
     @shapes.push @currShape
     
     if options?.keys?
-      @left = options.keys.leftKey
-      @right = options.keys.rightKey
+      @leftKey = options.keys.left
+      @rightKey = options.keys.right
     else
       @leftKey = 37 # Left arrow
       @rightKey = 39 # Right arrow
@@ -40,16 +40,13 @@ class SnakeOnline.Entities.Snake
     if @currShape.constructor.name is "Line"
       @x = @currShape.x2
       @y = @currShape.y2
-
     else
       if @direction is "left"
-        @rad = @currShape.rad1
-        {@x, @y} = @currShape.getPoint @rad
-        @rad -= 0.5 * Math.PI
+        {@x, @y} = @currShape.getPoint @currShape.rad1
+        @rad = @currShape.rad1 - 0.5 * Math.PI
       else
-        @rad = @currShape.rad2
-        {@x, @y} = @currShape.getPoint @rad
-        @rad += 0.5 * Math.PI
+        {@x, @y} = @currShape.getPoint @currShape.rad2
+        @rad = @currShape.rad2 + 0.5 * Math.PI
 
     direction = if @keyStates.get @leftKey
       "left"
