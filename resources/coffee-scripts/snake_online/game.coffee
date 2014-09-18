@@ -92,4 +92,4 @@ class SnakeOnline.Game
 
   onKeyUp: (e) ->
     e.preventDefault()
-    @keyStates.add e.keyCode
+    @keyStates.remove e.keyCode

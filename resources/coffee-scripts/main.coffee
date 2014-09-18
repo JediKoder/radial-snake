@@ -1,2 +1,2 @@
 window.onload = ->
-  new SnakeOnline.Game(document.getElementById("gameCanvas"), SnakeOnline.Screens.SplashLoading, no).play()
+  new SnakeOnline.Game(document.getElementById("gameCanvas"), SnakeOnline.Screens.SplashLoading, yes).play()

@@ -1,7 +1,7 @@
 class Engine.Screens.Statable extends Engine.Screen
   constructor: (game, state) ->
     super game
-
+    @initedStates = []
     @setState state
     @addStateEventListeners()
 
@@ -12,10 +12,14 @@ class Engine.Screens.Statable extends Engine.Screen
   update: (span) ->
     @state.update?.call this, span
 
-  setState: (name) ->
-    @removeStateEventListeners()
-    @state = @states[name]
+  setState: (state) ->
+    @removeStateEventListeners() if @state?
+    @state = @getStateHandler state
     @addStateEventListeners()
+    return unless @initedStates.indexOf(state) is -1 
+
+    @state.initialize.call this
+    @initedStates.push state
 
   addStateEventListeners: ->
     @state.events?.forEach (event) =>
@@ -24,9 +28,6 @@ class Engine.Screens.Statable extends Engine.Screen
   removeStateEventListeners: ->
     @state.events?.forEach (event) =>
       @game.removeEventListener event, @getEventListener.call(@state, event)
-
-  setState: (state) ->
-    @state = @getStateHandler state
 
   getStateHandler: (state) ->
     handler = @states[state]

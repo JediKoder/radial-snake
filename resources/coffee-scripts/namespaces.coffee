@@ -1,4 +1,5 @@
 @SnakeOnline =
+  Entities: {}
   Screens: {}
 
 @Engine =
