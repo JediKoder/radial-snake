@@ -1,29 +1,5 @@
 class Engine.Geometry.Line
-  constructor: (@p1, @p2) ->
-    Object.defineProperties this,
-      x1: 
-        get: -> 
-          @p1.x
-        set: (v) -> 
-          @p1.x = v
-      ,
-      x2: 
-        get: -> 
-          @p2.x
-        set: (v) -> 
-          @p2.x = v
-      ,
-      y1: 
-        get: -> 
-          @p1.y
-        set: (v) -> 
-          @p1.y = v
-      ,
-      y2: 
-        get: ->
-          @p2.y
-        set: (v) -> 
-          @p2.y = v
+  constructor: (@x1, @y1, @x2, @y2) ->
 
   getX: (y) ->
     x = (y - @y1) * (@x2 - @x1) / (@y2 - @y1) + @x1
@@ -33,11 +9,11 @@ class Engine.Geometry.Line
     y = (x - @x1) * (@y2 - @y1) / (@x2 - @x1) + @y1
     y if isNaN(y) or y.isBetween(@y1, @y2, yes)
 
-  hasPoint: (p) ->
-    x = @getX p.y
-    y = @getY p.x
-    ((isNaN(x) and p.x.isBetween @x1, @x2, yes) or x?.compare(p.x)) and
-    ((isNaN(y) and p.y.isBetween @y1, @y2, yes) or y?.compare(p.y))
+  hasPoint: (x, y) ->
+    lx = @getX y
+    ly = @getY x
+    ((isNaN(lx) and x.isBetween @x1, @x2, yes) or lx?.compare(x)) and
+    ((isNaN(ly) and y.isBetween @y1, @y2, yes) or ly?.compare(y))
 
   getLineIntersection: (l) ->
     return unless (@x1 - @x2) * (l.y1 - l.y2) - (@y1 - @y2) * (l.x1 - l.x2)

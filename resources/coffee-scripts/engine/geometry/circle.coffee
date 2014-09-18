@@ -1,37 +1,25 @@
 class Engine.Geometry.Circle
-  constructor: (@x, @y, @r, @rads) ->
-    Object.defineProperties this,
-      rad1: 
-        get: -> 
-          @rads[0]
-        set: (v) -> 
-          @rads[0] = v
-      ,
-      rad2: 
-        get: -> 
-          @rads[1]
-        set: (v) -> 
-          @rads[1] = v
+  constructor: (@x, @y, @r, @rad1, @rad2) ->
 
   getX: (rad) ->
-    return unless rad.isBetween @rads..., yes
+    return unless rad.isBetween @rad1, @rad2, yes
     @r * Math.cos(rad) + @x
 
   getY: (rad) ->
-    return unless rad.isBetween @rads..., yes
+    return unless rad.isBetween @rad1, @rad2, yes
     @r * Math.sin(rad) + @y
 
   getPoint: (rad) ->
-    return unless rad.isBetween @rads..., yes
+    return unless rad.isBetween @rad1, @rad2, yes
     x: @getX rad
     y: @getY rad
 
-  getRad: (p) ->
+  getRad: (x, y) ->
     rad = [
-      r = Math.acos (p.x - @x) / @r
+      r = Math.acos (x - @x) / @r
       2 * Math.PI + r
       2 * Math.PI - r
-      r = Math.asin (p.y - @y) / @r
+      r = Math.asin (y - @y) / @r
       2 * Math.PI + r
       Math.PI - r
     ]
@@ -46,11 +34,11 @@ class Engine.Geometry.Circle
 
     return unless rad?
 
-    rad += 2 * Math.PI * parseInt(@rads[0] / (2 * Math.PI))
-    rad if rad.isBetween @rads..., yes
+    rad += 2 * Math.PI * parseInt(@rad1 / (2 * Math.PI))
+    rad if rad.isBetween @rad1, @rad2, yes
 
-  hasPoint: (p) ->
-    @getRad(p)?
+  hasPoint: (x, y) ->
+    @getRad(x, y)?
 
   getCircleIntersection: (c) ->
     dx = c.x - @x
@@ -81,7 +69,7 @@ class Engine.Geometry.Circle
 
     [this, c].forEach (c) ->
       interPoints = interPoints.filter (p) ->
-        c.hasPoint p
+        c.hasPoint p.x, p.y
 
     interPoints if interPoints.length > 0
 
@@ -107,8 +95,8 @@ class Engine.Geometry.Circle
     ]
 
     .filter (p) => 
-      @hasPoint(p) and
-      l.hasPoint(p)
+      @hasPoint(p.x, p.y) and
+      l.hasPoint(p.x, p.y)
 
     interPoints = _.uniq interPoints, (p) ->
       "(#{p.x}, #{p.y})"

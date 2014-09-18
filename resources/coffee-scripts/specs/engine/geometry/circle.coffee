@@ -1,6 +1,6 @@
 describe "Engine.Geometry.Circle class", ->
   beforeEach ->
-    @circle = new Engine.Geometry.Circle 1, 1, 5, [0, 1.5 * Math.PI]
+    @circle = new Engine.Geometry.Circle 1, 1, 5, 0, 1.5 * Math.PI
 
   describe "getX method", ->
     describe "given inranged rad", ->
@@ -30,19 +30,21 @@ describe "Engine.Geometry.Circle class", ->
     describe "given inranged point", ->
       it "returns rad", ->
         # 0.8 PI
-        point = x: -3.0450849718747346, y: 3.9389262614623686
-        expect(@circle.getRad(point)).toBeCloseTo 0.8 * Math.PI
+        x = -3.0450849718747346
+        y = 3.9389262614623686
+        expect(@circle.getRad(x, y)).toBeCloseTo 0.8 * Math.PI
 
     describe "given outranged point", ->
       it "returns nothing", ->
         # 1.8 PI
-        point = x: 5.045084971874736, y: -1.9389262614623664
-        expect(@circle.getRad(point)).toBeUndefined()
+        x = 5.045084971874736
+        y = -1.9389262614623664
+        expect(@circle.getRad(x, y)).toBeUndefined()
 
   describe "getCircleIntersection method", ->
     describe "given circle with 2 intersection points", ->
       it "returns array with intersection points", ->
-        circle = new Engine.Geometry.Circle -5, 1, 5, [0, 2 * Math.PI]
+        circle = new Engine.Geometry.Circle -5, 1, 5, 0, 2 * Math.PI
         expect(@circle.getCircleIntersection(circle)).toEqual [
           { x: -2, y: -3 }
           { x: -2, y: 5 }
@@ -50,35 +52,32 @@ describe "Engine.Geometry.Circle class", ->
 
     describe "given circle with 1 intersection points", ->
       it "returns array with intersection point", ->
-        circle = new Engine.Geometry.Circle -5, 1, 5, [0, 1 * Math.PI]
+        circle = new Engine.Geometry.Circle -5, 1, 5, 0, 1 * Math.PI
         expect(@circle.getCircleIntersection(circle)).toEqual [
           { x: -2, y: 5 }
         ]
 
     describe "given kissing circle", ->
       it "returns array with intersection point", ->
-        circle = new Engine.Geometry.Circle -9, 1, 5, [0, 2 * Math.PI]
+        circle = new Engine.Geometry.Circle -9, 1, 5, 0, 2 * Math.PI
         expect(@circle.getCircleIntersection(circle)).toEqual [
           { x: -4, y: 1 }
         ]
 
     describe "given outer circle", ->
       it "returns nothing", ->
-        circle = new Engine.Geometry.Circle 10, 10, 2, [0, 2 * Math.PI]
+        circle = new Engine.Geometry.Circle 10, 10, 2, 0, 2 * Math.PI
         expect(@circle.getCircleIntersection(circle)).toBeUndefined()
 
     describe "given inner circle", ->
       it "return nothing", ->
-        circle = new Engine.Geometry.Circle 1, 1, 2, [0, 2 * Math.PI]
+        circle = new Engine.Geometry.Circle 1, 1, 2, 0, 2 * Math.PI
         expect(@circle.getCircleIntersection(circle)).toBeUndefined()
 
   describe "getLineIntersection method", ->
     describe "given line with 2 intersection points", ->
       it "returns array with intersection points", ->
-        line = new Engine.Geometry.Line(
-          { x: -10, y: 1 }
-          { x: 10, y: 1 }
-        )
+        line = new Engine.Geometry.Line -10, 1, 10, 1
         expect(@circle.getLineIntersection(line)).toEqual [
           { x: 6, y: 1 }
           { x: -4, y: 1 }
@@ -86,28 +85,19 @@ describe "Engine.Geometry.Circle class", ->
 
     describe "given line with 1 intersection point", ->
       it "returns array with intersection point", ->
-        line = new Engine.Geometry.Line(
-          { x: -10, y: 1 }
-          { x: 1, y: 1 }
-        )
+        line = new Engine.Geometry.Line -10, 1, 1, 1
         expect(@circle.getLineIntersection(line)).toEqual [
           { x: -4, y: 1 }
         ]
 
     describe "given kissing line", ->
       it "returns array with intersection point", ->
-        line = new Engine.Geometry.Line(
-          { x: -10, y: 6 }
-          { x: 10, y: 6 }
-        )
+        line = new Engine.Geometry.Line -10, 6, 10, 6
         expect(@circle.getLineIntersection(line)).toEqual [
           { x: 1, y: 6 }
         ]
 
     describe "given outranged line", ->
       it "returns nothing", ->
-        line = new Engine.Geometry.Line(
-          { x: -10, y: 10 }
-          { x: 10, y: 10 }
-        )
+        line = new Engine.Geometry.Line -10, 10, 10, 10
         expect(@circle.getLineIntersection(line)).toBeUndefined()
