@@ -7,63 +7,70 @@ Object.defineProperties self,
     get: ->
       arguments.callee.caller.caller
   ,
-  "length":
-    get: ->
-      arguments.callee.caller.length
-  ,
-  "name":
-    get: ->
-      arguments.callee.caller.name
-  ,
   "callee":
     get: ->
       arguments.callee.caller
 
-Object::getProperty = (keys...) ->
-  prop = this
+Object.defineProperties Object.prototype,
+  "getProperty":
+    enumerable: no
+    value: (keys...) ->
+      prop = this
 
-  keys.forEach (k) ->
-    prop = prop[k]
+      keys.forEach (k) ->
+        prop = prop[k]
 
-  prop
+      prop
 
-Object::forEach = (iterator) ->
-  for k, v of this
-    if @hasOwnProperty(k)
-      iterator k, v, this
+  "forEach":
+    enumerable: no
+    value: (iterator) ->
+      for k, v of this
+        if @hasOwnProperty(k)
+          iterator k, v, this
 
-Object::map = (iterator) ->
-  map = []
+  "map":
+    enumerable: no
+    value: (iterator) ->
+      map = []
 
-  @forEach (k, v, obj) ->
-    map.push iterator(k, v, obj)
+      @forEach (k, v, obj) ->
+        map.push iterator(k, v, obj)
 
-  map
+      map
 
-Array::common = (iterator) ->
-  common = []
+Object.defineProperties Array.prototype,
+  "common":
+    enumerable: no
+    value: (iterator) ->
+      common = []
 
-  for i in [0...@length]
-    for j in [i + 1...@length]
-      if iterator?
-        common.push @[j] if iterator @[j], @[i]
+      for i in [0...@length]
+        for j in [i + 1...@length]
+          if iterator?
+            common.push @[j] if iterator @[j], @[i]
+          else
+            common.push @[j] if @[j] is @[i]
+
+      common
+
+Object.defineProperties Number.prototype,
+  "isBetween":
+    enumerable: no
+    value: (num1, num2, isFloat) ->
+      min = Math.min num1, num2
+      max = Math.max num1, num2
+
+      if isFloat
+        this.compare(min, ">") and
+        this.compare(max, "<")
       else
-        common.push @[j] if @[j] is @[i]
+        this >= min and this <= max
 
-  common
-
-Number::isBetween = (num1, num2, isFloat) ->
-  min = Math.min num1, num2
-  max = Math.max num1, num2
-
-  if isFloat
-    this.compare(min, ">") and
-    this.compare(max, "<")
-  else
-    this >= min and this <= max
-
-Number::compare = (f, method) ->
-  switch method
-    when "<" then this <= f + Number.EPSILON
-    when ">" then this >= f - Number.EPSILON
-    else Math.abs(this - f) <= Number.EPSILON
+  "compare":
+    enumerable: no
+    value: (number, method) ->
+      switch method
+        when "<" then this <= number + Number.EPSILON
+        when ">" then this >= number - Number.EPSILON
+        else Math.abs(this - number) <= Number.EPSILON
