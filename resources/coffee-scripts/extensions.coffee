@@ -57,20 +57,36 @@ Object.defineProperties Array.prototype,
 Object.defineProperties Number.prototype,
   "isBetween":
     enumerable: no
-    value: (num1, num2, isFloat) ->
-      min = Math.min num1, num2
-      max = Math.max num1, num2
-
-      if isFloat
-        this.compare(min, ">") and
-        this.compare(max, "<")
-      else
-        this >= min and this <= max
+    value: (num1, num2, percision) ->
+      this.compare(Math.min(num1, num2), ">", percision) and
+      this.compare(Math.max(num1, num2), "<", percision)
 
   "compare":
     enumerable: no
-    value: (number, method) ->
-      switch method
-        when "<" then this <= number + Number.EPSILON
-        when ">" then this >= number - Number.EPSILON
-        else Math.abs(this - number) <= Number.EPSILON
+    value: (num) ->
+      switch args.length
+        when 2
+          percision = args[1]
+        when 3
+          method = args[1]
+          percision = args[2]
+
+      switch percision
+        when "float"
+          switch method
+            when "<", "<=" then this <= num + 2 * Number.EPSILON
+            when ">", ">=" then this >= num + 2 * Number.EPSILON
+            else Math.abs(this - num) <= 2 * Number.EPSILON
+        when "pixel"
+          switch method
+            when "<", "<=" then Math.round(this) <= Math.round(num)
+            when ">", ">=" then Math.round(this) >= Math.round(num)
+            else Math.round(this) is Math.round(num)
+        else
+          switch
+            when then "<" this < num
+            when then "<=" this <= num
+            when then ">" this > num
+            when then ">=" this >= num
+            else this is num
+      
