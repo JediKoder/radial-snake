@@ -1,41 +1,40 @@
 class Engine.Geometry.Circle
+  COMPLETE_CIRCLE = (2 * Math.PI).trim 9, "ceil"
+
   constructor: (@x, @y, @r, @rad1, @rad2) ->
+    @x = x.trim 9
+    @y = y.trim 9
+    @r = r.trim 9
+    @rad1 = rad1.trim 9, "floor"
+    @rad2 = rad2.trim 9, "ceil"
 
   getX: (rad) ->
-    return unless rad.isBetween @rad1, @rad2, yes
-    @r * Math.cos(rad) + @x
+    return unless rad.isBetween @rad1, @rad2
+    (@r * Math.cos(rad) + @x).trim 9
 
   getY: (rad) ->
-    return unless rad.isBetween @rad1, @rad2, yes
-    @r * Math.sin(rad) + @y
+    return unless rad.isBetween @rad1, @rad2
+    (@r * Math.sin(rad) + @y).trim 9
 
   getPoint: (rad) ->
-    return unless rad.isBetween @rad1, @rad2, yes
-    x: @getX rad
-    y: @getY rad
+    return unless rad.isBetween @rad1, @rad2
+    x: (@r * Math.cos(rad) + @x).trim 9
+    y: (@r * Math.sin(rad) + @y).trim 9
 
   getRad: (x, y) ->
-    rad = [
-      r = Math.acos (x - @x) / @r
-      2 * Math.PI + r
-      2 * Math.PI - r
-      r = Math.asin (y - @y) / @r
-      2 * Math.PI + r
-      Math.PI - r
-    ]
+    rad = Math.atan2 y - @y, x - @x
 
-    .common (a, b) ->
-      a.compare b
+    if rad?.isBetween @rad1, @rad2
+      return rad
 
-    .filter (r) ->
-      r >= 0 and r <= 2 * Math.PI
+    cycRad = if Math.abs(@rad1) > Math.abs(@rad2)
+      @rad1
+    else
+      @rad2
 
-    rad = rad[0]
-
-    return unless rad?
-
-    rad += 2 * Math.PI * parseInt(@rad1 / (2 * Math.PI))
-    rad if rad.isBetween @rad1, @rad2, yes
+    if (rad + 2 * Math.PI * Math.floor(cycRad / (2 * Math.PI))).trim(9).isBetween(@rad1, @rad2) or
+       (rad + 2 * Math.PI * Math.ceil(cycRad / (2 * Math.PI))).trim(9).isBetween(@rad1, @rad2)
+      rad
 
   hasPoint: (x, y) ->
     @getRad(x, y)?
@@ -63,6 +62,10 @@ class Engine.Geometry.Circle
       x: x - rx
       y: y - ry
     ]
+
+    .map (p) ->
+      x: p.x.trim 9
+      y: p.y.trim 9
 
     interPoints = _.uniq interPoints, (p) ->
       "(#{p.x}, #{p.y})"
@@ -93,6 +96,10 @@ class Engine.Geometry.Circle
       x: (h * dy - ((dy / Math.abs(dy)) || 1) * dx * Math.sqrt(delta)) / Math.pow(d, 2) + @x
       y: (-h * dx - Math.abs(dy) * Math.sqrt(delta)) / Math.pow(d, 2) + @y
     ]
+
+    .map (p) ->
+      x: p.x.trim 9
+      y: p.y.trim 9
 
     .filter (p) => 
       @hasPoint(p.x, p.y) and

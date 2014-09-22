@@ -80,11 +80,11 @@ class Engine.Animations.Keyframe
 
   _findEndKeyframe: (keyframes) ->
     _.find keyframes, (k) =>
-      k.frame >= @frame
+      k.frame >= (@frame || 1)
 
   _findStartKeyframe: (keyframes) ->
     keyframes[keyframes.indexOf(_.find keyframes, (k) =>
-      k.frame >= @frame
+      k.frame >= (@frame || 1)
     ) - 1]
 
   _calcRelativeVal: (a, b, r) ->

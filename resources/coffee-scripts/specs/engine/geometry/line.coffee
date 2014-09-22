@@ -41,16 +41,10 @@ describe "Engine.Geometry.Line class", ->
 
     describe "given parallal line", ->
       it "returns nothing", ->
-        line = new Engine.Geometry.Line(
-          { x: -5, y: -6 }
-          { x: 5, y: 4 }
-        )
+        line = new Engine.Geometry.Line -5, -6, 5, 4
         expect(@line.getLineIntersection(line)).toBeUndefined()
 
     describe "given outlimits line", ->
       it "returns nothing", ->
-        line = new Engine.Geometry.Line(
-          { x: 10, y: 10 }
-          { x: 10, y: 15 }
-        )
+        line = new Engine.Geometry.Line 10, 10, 10, 15
         expect(@line.getLineIntersection(line)).toBeUndefined()

@@ -25,7 +25,7 @@ class SnakeOnline.Entities.Snake
       context.strokeStyle = @color
       context.beginPath()
 
-      if shape.constructor.name is "Line"
+      if shape instanceof Engine.Geometry.Line
         context.moveTo shape.x1, shape.y1
         context.lineTo shape.x2, shape.y2
       else
@@ -37,7 +37,7 @@ class SnakeOnline.Entities.Snake
   update: (span) ->
     step = @v * span / 1000
 
-    if @currShape.constructor.name is "Line"
+    if @currShape instanceof Engine.Geometry.Line
       @x = @currShape.x2
       @y = @currShape.y2
     else
@@ -82,3 +82,32 @@ class SnakeOnline.Entities.Snake
       else
         @currShape.x2 += step * Math.cos(@rad)
         @currShape.y2 += step * Math.sin(@rad)
+
+  getSelfIntersection: ->
+    if @currShape instanceof Engine.Geometry.Circle and
+       Math.abs(@currShape.rad1 - @currShape.rad2) >= 2 * Math.PI
+      return @currShape.getPoint if @direction is "left"
+        @currShape.rad1
+      else
+        @currShape.rad2
+
+    result = undefined
+
+    @shapes.slice(0, -2).some (s) =>
+      if s instanceof Engine.Geometry.Line
+        result = @currShape.getLineIntersection s
+      else
+        result = @currShape.getCircleIntersection s
+
+    result
+
+  getSnakeIntersection: (snake) ->
+    result = undefined
+
+    snake.shapes.some (s) =>
+      result = if s instanceof Engine.Geometry.Line
+        @currShape.getLineIntersection s
+      else
+        @currShape.getCircleIntersection s
+
+    result

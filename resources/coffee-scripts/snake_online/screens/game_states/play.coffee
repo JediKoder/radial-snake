@@ -2,10 +2,10 @@ SnakeOnline.Screens.Game::playState =
   initialize: ->
     @snakes = [
       new SnakeOnline.Entities.Snake(
-        @width / 2 - @width / 3
-        @height / 2
+        @width / 4
+        @height / 4
         50
-        0
+        Math.PI / 4
         100
         "red"
         @keyStates
@@ -15,10 +15,10 @@ SnakeOnline.Screens.Game::playState =
       )
 
       new SnakeOnline.Entities.Snake(
-        @width / 2 + @width / 3
-        @height / 2
+        @width / 4 * 3
+        @height / 4 * 3
         50
-        Math.PI
+        -Math.PI / 4 * 3
         100
         "azure"
         @keyStates
@@ -33,7 +33,14 @@ SnakeOnline.Screens.Game::playState =
       snake.draw context
 
   update: (span) ->
-    @snakes.forEach (snake) ->
+    @snakes.forEach (snake, i) =>
       snake.update span
+      selfIntersection = snake.getSelfIntersection()
+      console.log "self intersection" if selfIntersection?
+
+      @snakes.forEach (rival, j) =>
+        return if i is j
+        snakeIntersection = snake.getSnakeIntersection rival
+        console.log "snake intersection" if snakeIntersection?
 
     this
