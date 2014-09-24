@@ -1,12 +1,4 @@
 class SnakeOnline.Entities.Snake
-  ###
-  x (px number) - Initial x
-  y (px number) - Initial y
-  r (px number) - Radius of steering circle
-  rad (radians number) - Initial moving angle
-  v (px/s number) - Moving speed 
-  color (color string) - Color
-  ###
   constructor: (@x, @y, @r, @rad, @v, @color, @keyStates, options) ->
     @shapes = []
     @currShape = new Engine.Geometry.Line x, y, x, y
@@ -38,15 +30,23 @@ class SnakeOnline.Entities.Snake
     step = @v * span / 1000
 
     if @currShape instanceof Engine.Geometry.Line
+      {x: lastX, y: lastY} = this
       @x = @currShape.x2
       @y = @currShape.y2
+      @lastBit = new Engine.Geometry.Line lastX, lastY, @x, @y
     else
+      {x: lastX, y: lastY, r: lastR} = @currShape
+
       if @direction is "left"
+        lastRad = @rad + 0.5 * Math.PI
         {@x, @y} = @currShape.getPoint @currShape.rad1
         @rad = @currShape.rad1 - 0.5 * Math.PI
+        @lastBit = new Engine.Geometry.Circle lastX, lastY, lastR, @currShape.rad1, lastRad
       else
+        lastRad = @rad - 0.5 * Math.PI
         {@x, @y} = @currShape.getPoint @currShape.rad2
         @rad = @currShape.rad2 + 0.5 * Math.PI
+        @lastBit = new Engine.Geometry.Circle lastX, lastY, lastR, lastRad, @currShape.rad2
 
     direction = if @keyStates.get @leftKey
       "left"
@@ -95,9 +95,9 @@ class SnakeOnline.Entities.Snake
 
     @shapes.slice(0, -2).some (s) =>
       if s instanceof Engine.Geometry.Line
-        result = @currShape.getLineIntersection s
+        result = @lastBit.getLineIntersection s
       else
-        result = @currShape.getCircleIntersection s
+        result = @lastBit.getCircleIntersection s
 
     result
 
@@ -106,8 +106,8 @@ class SnakeOnline.Entities.Snake
 
     snake.shapes.some (s) =>
       result = if s instanceof Engine.Geometry.Line
-        @currShape.getLineIntersection s
+        @lastBit.getLineIntersection s
       else
-        @currShape.getCircleIntersection s
+        @lastBit.getCircleIntersection s
 
     result

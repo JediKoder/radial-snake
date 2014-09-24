@@ -1,12 +1,15 @@
 class Engine.Geometry.Circle
-  COMPLETE_CIRCLE = (2 * Math.PI).trim 9, "ceil"
-
-  constructor: (@x, @y, @r, @rad1, @rad2) ->
+  constructor: (x, y, r, rad1, rad2) ->
     @x = x.trim 9
     @y = y.trim 9
     @r = r.trim 9
-    @rad1 = rad1.trim 9, "floor"
-    @rad2 = rad2.trim 9, "ceil"
+
+    if rad1 > rad2
+      @rad1 = rad1.trim 9, "floor"
+      @rad2 = rad2.trim 9, "ceil"
+    else
+      @rad1 = rad1.trim 9, "ceil"
+      @rad2 = rad2.trim 9, "floor"
 
   getX: (rad) ->
     return unless rad.isBetween @rad1, @rad2
@@ -103,7 +106,7 @@ class Engine.Geometry.Circle
 
     .filter (p) => 
       @hasPoint(p.x, p.y) and
-      l.hasPoint(p.x, p.y)
+      l.boundsHasPoint(p.x, p.y)
 
     interPoints = _.uniq interPoints, (p) ->
       "(#{p.x}, #{p.y})"

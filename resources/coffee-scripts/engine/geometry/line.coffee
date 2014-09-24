@@ -14,6 +14,11 @@ class Engine.Geometry.Line
     y if isNaN(y) or y.isBetween(@y1, @y2)
 
   hasPoint: (x, y) ->
+    return false unless @boundsHasPoint x, y
+    m = ((@y2 - @y1) / (@x2 - @x1)).trim 9
+    y - @y1 is m * (x - @x1)
+
+  boundsHasPoint: (x, y) ->
     x.isBetween(@x1, @x2) and
     y.isBetween(@y1, @y2)
 
