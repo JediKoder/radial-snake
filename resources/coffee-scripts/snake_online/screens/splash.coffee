@@ -1,9 +1,9 @@
 class SnakeOnline.Screens.Splash extends Engine.Screen
   constructor: (game, assets) ->
-    super game
+    super game, assets
     @load()
 
-    splashSprite = new Engine.Sprite assets.splashTexture
+    splashSprite = new Engine.Sprite @splashTexture
     splashSprite.align = "center"
     splashSprite.location.x = @width / 2
 
@@ -44,7 +44,7 @@ class SnakeOnline.Screens.Splash extends Engine.Screen
 
     @assets =
       logoTexture: new Image
-      instructionsFont: new Engine.Font
+      minecraftiaFont: new Engine.Font
 
     _.values(@assets).forEach (v, i, values) =>
       v.onload = => 

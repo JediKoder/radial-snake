@@ -1,6 +1,6 @@
 class Engine.Screens.Statable extends Engine.Screen
-  constructor: (game, state) ->
-    super game
+  constructor: (game, state, assets) ->
+    super game, assets
     @initedStates = []
     @setState state
     @addStateEventListeners()

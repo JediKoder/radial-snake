@@ -3,7 +3,7 @@ SnakeOnline.Screens.Game::readyState =
     "keydown": "onKeyDown"
 
   initialize: -> 
-    @readySprite = new Engine.Sprite @assets.readyFont.createTexture "Ready"
+    @readySprite = new Engine.Sprite @minecraftiaFont.createTexture "Ready"
     @readySprite.align = "center"
     @readySprite.setPercentage "width", @width, 15, "height"
     @readySprite.location = x: @width / 2, y: @height / 2

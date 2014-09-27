@@ -1,5 +1,7 @@
 class Engine.Screen
-  constructor: (@game) ->
+  constructor: (@game, assets) ->
+    _.extend this, assets
+
     @width = game.canvas.width
     @height = game.canvas.height
     @keyStates = game.keyStates
