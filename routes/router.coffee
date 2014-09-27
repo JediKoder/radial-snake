@@ -1,9 +1,9 @@
 routeModules = [
-  require "./endpoints"
   require "./pages"
+  require "./endpoints"
 ]
 
-module.exports = (server) ->
-  routeModules.forEach (routes) ->
-    routes.forEach (route) ->
+exports.implement = (server) ->
+  routeModules.forEach (module) ->
+    module.routes(server).forEach (route) ->
       server.route route

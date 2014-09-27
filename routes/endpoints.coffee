@@ -1,4 +1,4 @@
-module.exports = [
+exports.routes = -> [
   method: "GET"
   path: "/scripts/{path*}"
   handler: 
