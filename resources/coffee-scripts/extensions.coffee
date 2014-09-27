@@ -1,4 +1,8 @@
 Object.defineProperties self,
+  "doc":
+    get: ->
+      document
+  ,
   "args":
     get: ->
       arguments.callee.caller.arguments
