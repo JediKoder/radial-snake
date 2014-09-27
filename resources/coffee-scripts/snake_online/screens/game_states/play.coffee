@@ -10,8 +10,8 @@ SnakeOnline.Screens.Game::playState =
         "red"
         @keyStates
         keys:
-          left: 37
-          right: 39
+          left: 37 # left
+          right: 39 # right
       )
 
       new SnakeOnline.Entities.Snake(
@@ -23,8 +23,8 @@ SnakeOnline.Screens.Game::playState =
         "azure"
         @keyStates
         keys:
-          left: 65
-          right: 68
+          left: 65 # a
+          right: 68 # d
       )
     ]
 
@@ -33,14 +33,21 @@ SnakeOnline.Screens.Game::playState =
       snake.draw context
 
   update: (span) ->
+    disqualifiedIndexes = []
+
     @snakes.forEach (snake, i) =>
       snake.update span
       selfIntersection = snake.getSelfIntersection()
-      console.log "self intersection" if selfIntersection?
+      disqualifiedIndexes.push i if selfIntersection?
 
       @snakes.forEach (rival, j) =>
         return if i is j
         snakeIntersection = snake.getSnakeIntersection rival
-        console.log "snake intersection" if snakeIntersection?
+        disqualifiedIndexes.push i if snakeIntersection?
+
+    disqualifiedIndexes.forEach (index) =>
+      @snakes.splice index, 1
+      if @snakes.length is 1
+        @snakes[0].score++
 
     this

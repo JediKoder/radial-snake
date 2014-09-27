@@ -3,6 +3,7 @@ class SnakeOnline.Entities.Snake
     @shapes = []
     @currShape = new Engine.Geometry.Line x, y, x, y
     @shapes.push @currShape
+    @score = 0
     
     if options?.keys?
       @leftKey = options.keys.left

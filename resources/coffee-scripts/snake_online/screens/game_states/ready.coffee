@@ -3,10 +3,10 @@ SnakeOnline.Screens.Game::readyState =
     "keydown": "onKeyDown"
 
   initialize: -> 
-    @readyText = new Engine.Text "READY", "50pt Minecraftia"
-    @readyText.location = x: @width / 2, y: @height / 2
+    @readyText = new Engine.Sprites.Text "Ready", @assets.readyFont
     @readyText.align = "center"
-    @readyText.color = "white"
+    @readyText.setPercentage "width", @width, 20, "height"
+    @readyText.location = x: @width / 2, y: @height / 2
 
   draw: (context) ->
     @readyText.draw context

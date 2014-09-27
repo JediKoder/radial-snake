@@ -44,7 +44,7 @@ class SnakeOnline.Screens.Splash extends Engine.Screen
 
     @assets =
       logoTexture: new Image
-      instructionsTexture: new Image
+      instructionsFont: new Engine.Font
 
     _.values(@assets).forEach (v, i, values) =>
       v.onload = => 
@@ -52,4 +52,4 @@ class SnakeOnline.Screens.Splash extends Engine.Screen
 
       switch i
         when 0 then v.src = "/textures/logo.png"
-        when 1 then v.src = "/textures/menu/instructions.png"
+        when 1 then v.src = "/fonts/minecraftia"

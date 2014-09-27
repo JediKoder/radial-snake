@@ -12,7 +12,7 @@ class SnakeOnline.Game
     canvas.addEventListener "keyup", @onKeyUp.bind(this), no
 
     @context = canvas.getContext "2d"
-    @bufferedCanvas = document.createElement "canvas"
+    @bufferedCanvas = doc.createElement "canvas"
     @bufferedContext = @bufferedCanvas.getContext "2d"
     @bufferedCanvas.width = canvas.width
     @bufferedCanvas.height = canvas.height
