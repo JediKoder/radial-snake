@@ -4,7 +4,7 @@
   "private": true,
   "repository": {
     "type": "git",
-    "url": "https://github.com/DAB0mB/snakeonline.git"
+    "url": "https://DAB0mB@bitbucket.org/DAB0mB/snakeonline.git"
   },
   "dependencies": {
     "hapi": "^6.2.0",
