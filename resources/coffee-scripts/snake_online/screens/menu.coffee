@@ -7,12 +7,12 @@ class SnakeOnline.Screens.Menu extends Engine.Screen
     @logoSprite = new Engine.Sprite assets.logoTexture
     @logoSprite.setPercentage "width", @width, 30, "height"
 
-    instructionsText = new Engine.Sprites.Text "Press a key to start", assets.instructionsFont
-    instructionsText.align = "center"
-    instructionsText.setPercentage "width", @width, 35, "height"
-    instructionsText.location = x: @width / 2, y: @height / 2
+    instructionsSprite = new Engine.Sprite assets.instructionsFont.createTexture "Press a key to start"
+    instructionsSprite.align = "center"
+    instructionsSprite.setPercentage "width", @width, 35, "height"
+    instructionsSprite.location = x: @width / 2, y: @height / 2
 
-    @instructionsAnim = new Engine.Animations.Keyframe instructionsText, [
+    @instructionsAnim = new Engine.Animations.Keyframe instructionsSprite, [
       opacity: 1
       frame: 0
     ,

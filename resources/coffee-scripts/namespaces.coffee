@@ -6,4 +6,3 @@
   Animations: {}
   Geometry: {}
   Screens: {}
-  Sprites: {}

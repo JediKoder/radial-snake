@@ -3,13 +3,13 @@ SnakeOnline.Screens.Game::readyState =
     "keydown": "onKeyDown"
 
   initialize: -> 
-    @readyText = new Engine.Sprites.Text "Ready", @assets.readyFont
-    @readyText.align = "center"
-    @readyText.setPercentage "width", @width, 20, "height"
-    @readyText.location = x: @width / 2, y: @height / 2
+    @readySprite = new Engine.Sprite @assets.readyFont.createTexture "Ready"
+    @readySprite.align = "center"
+    @readySprite.setPercentage "width", @width, 15, "height"
+    @readySprite.location = x: @width / 2, y: @height / 2
 
   draw: (context) ->
-    @readyText.draw context
+    @readySprite.draw context
 
   update: (span) ->
     @setState "play" if @ready

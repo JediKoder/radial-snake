@@ -18,6 +18,27 @@ class Engine.Font
         $.getJSON "#{src}.json", (@data) =>
           done?()
 
+  createTexture: (text) ->
+    canvas = doc.createElement "canvas"
+    context = canvas.getContext "2d"
+    canvas.height = @data.height
+
+    canvas.width = _.reduce text, (width, char) =>
+      width + @data.chars[char].width
+    , 0
+
+    offset = 0
+
+    text.map (i, c) =>
+      @get c
+
+    .forEach (sprite, i) =>
+      char = @data.chars[text.charAt(i)]
+      sprite.draw context, offset + char.offset.x, char.offset.y
+      offset += char.width
+
+    canvas
+
   get: (char) ->
     return @sprites[char] if @sprites[char]?
 
