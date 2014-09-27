@@ -7,19 +7,21 @@ class SnakeOnline.Screens.Menu extends Engine.Screen
     @logoSprite = new Engine.Sprite assets.logoTexture
     @logoSprite.setPercentage "width", @width, 30, "height"
 
-    @instructionsAnim = new Engine.Animations.Keyframe assets.instructionsTexture, [
+    instructionsSprite = new Engine.Sprite assets.instructionsTexture
+    instructionsSprite.align = "center"
+    instructionsSprite.setPercentage "width", @width, 35, "height"
+    instructionsSprite.location = x: @width / 2, y: @height / 2
+
+    @instructionsAnim = new Engine.Animations.Keyframe instructionsSprite, [
       opacity: 1
       frame: 0
     ,
       opacity: 0
       frame: 2000
-    ],
-      align: "center"
-      setPercentage: ["width", @width, 35, "height"]
-      location: x: @width / 2, y: @height / 2
+    ]
 
     @instructionsAnim.repMode = "full"
-    @instructionsAnim.playing = true
+    @instructionsAnim.playing = yes
     @addEventListeners()
 
   draw: (context) ->
@@ -36,4 +38,4 @@ class SnakeOnline.Screens.Menu extends Engine.Screen
       this
 
   onKeyDown: (e) ->
-    @keyPressed = true
+    @keyPressed = yes

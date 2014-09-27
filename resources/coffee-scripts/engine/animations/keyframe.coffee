@@ -1,30 +1,18 @@
 class Engine.Animations.Keyframe
-  constructor: (texture, @keyframes, options) ->
+  constructor: (@sprite, @keyframes) ->
     @age = 0
     @frame = 0
     @repMode = "none"
     @lastKeyframe = _.last keyframes
     @lastFrame = @lastKeyframe.frame
-    @sprite = new Engine.Sprite texture
-
-    options.forEach (k, option) =>
-      property = @sprite[k]
-
-      if typeof property is "function"
-        if option instanceof Array
-          property.apply @sprite, option
-        else
-          property.call @sprite, option
-      else
-        @sprite[k] = option
 
     keyframes[0].forEach (k, option) =>
-      property = @sprite[k]
+      property = sprite[k]
 
       if typeof property is "object"
         _.extend property, option
       else
-        @sprite[k] = option
+        sprite[k] = option
 
     @widths = keyframes.filter (k) -> k.width?
     @heights = keyframes.filter (k) -> k.height? 
@@ -83,9 +71,14 @@ class Engine.Animations.Keyframe
       k.frame >= (@frame || 1)
 
   _findStartKeyframe: (keyframes) ->
-    keyframes[keyframes.indexOf(_.find keyframes, (k) =>
-      k.frame >= (@frame || 1)
-    ) - 1]
+    index = undefined
+
+    keyframes.some (k, i) =>
+      if k.frame >= (@frame || 1)
+        index = i
+        true
+
+    keyframes[index - 1]
 
   _calcRelativeVal: (a, b, r) ->
     (b - a) * r + a

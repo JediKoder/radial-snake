@@ -29,27 +29,15 @@ class Engine.Sprite
 
     context.restore()
 
-  setPercentage: (keys, relative, percents, adapters) ->
-    prop = @
+  setPercentage: (key, relative, percents, adapters...) ->
+    keysChain = key.split "."
+    dstKey = keysChain.pop()
+    srcProp = @getProperty keysChain...
+    oldVal = srcProp[dstKey]
+    newVal = srcProp[dstKey] = percents * relative / 100
 
-    if keys instanceof Array
-      key = keys.pop()
-      keys.forEach (k) -> prop = prop[k]
-      keys.push key
-    else
-      key = keys
-
-    oldVal = prop[key]
-    newVal = prop[key] = percents * relative / 100
-    return unless adapters?
-
-    prop = @
-
-    if adapters instanceof Array
-      adapter = adapters.pop()
-      adapters.forEach (k) -> prop = prop[k]
-      adapters.push adapter
-    else
-      adapter = adapters
-
-    prop[adapter] *= newVal / oldVal
+    adapters.forEach (adapter) =>
+      keysChain = adapter.split "."
+      dstKey = keysChain.pop()
+      srcProp = @getProperty keysChain...
+      srcProp[dstKey] *= newVal / oldVal

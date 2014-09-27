@@ -3,27 +3,27 @@ class SnakeOnline.Screens.Splash extends Engine.Screen
     super game
     @load()
 
-    splashTexture = assets.splashTexture
+    splashSprite = new Engine.Sprite assets.splashTexture
+    splashSprite.align = "center"
+    splashSprite.location.x = @width / 2
 
-    @splashAnim = new Engine.Animations.Keyframe splashTexture, [
-      width: splashTexture.width / 4
-      height: splashTexture.height / 4
+    @splashAnim = new Engine.Animations.Keyframe splashSprite, [
+      width: splashSprite.width / 4
+      height: splashSprite.height / 4
       opacity: 0.4
       location: y: this.height / 2 - 30
       frame: 0
     ,
-      width: splashTexture.width / 3
-      height: splashTexture.height / 3
+      width: splashSprite.width / 3
+      height: splashSprite.height / 3
       opacity: 1
       frame: 2000
     ,
-      width: splashTexture.width / 3 + splashTexture.width * 0.05
-      height: splashTexture.height / 3 + splashTexture.height * 0.05
+      width: splashSprite.width / 3 + splashSprite.width * 0.05
+      height: splashSprite.height / 3 + splashSprite.height * 0.05
       location: y: this.height / 2
       frame: 5000
-    ],
-      align: "center"
-      location: x: @width / 2
+    ]
 
     @splashAnim.playing = yes
 
