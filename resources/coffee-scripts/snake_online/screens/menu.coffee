@@ -22,7 +22,6 @@ class SnakeOnline.Screens.Menu extends Engine.Screen
 
     @instructionsAnim.repMode = "full"
     @instructionsAnim.playing = yes
-    @addEventListeners()
 
   draw: (context) ->
     super context
@@ -31,7 +30,6 @@ class SnakeOnline.Screens.Menu extends Engine.Screen
 
   update: (span) ->
     if @keyPressed
-      @removeEventListeners()
       new SnakeOnline.Screens.Game @game, {@minecraftiaFont}
 
     else
