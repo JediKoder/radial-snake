@@ -12,8 +12,7 @@ SnakeOnline.Screens.Game::readyState =
 
   update: (span) ->
     return on unless @ready
-    
-    @appendState "play"
+    @prependState "play"
     off
 
   onKeyDown: ->

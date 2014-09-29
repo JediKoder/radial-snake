@@ -1,25 +1,35 @@
 class Engine.Screens.Statable extends Engine.Screen
   constructor: (game, assets) ->
     super game, assets
-    @states = []
+
+    @states = @states.map (name, state) =>
+      state = if typeof state is "string"
+        @[state]
+      else
+        state
+
+      state.name = name
+      state
+
+    @activeStates = []
 
   draw: (context) ->
     super context
-    @states.forEach (state) =>
+    @activeStates.forEach (state) =>
       state.draw?.call this, context
 
   update: (span) ->
     garbage = []
 
-    @states.forEach (state, i) =>
+    @activeStates.forEach (state, i) =>
       garbage.push i if !state.update?.call(this, span)
 
     garbage.forEach (i) =>
-      @removeStateEventListeners @states.splice(i, 1)[0]
+      @removeStateEventListeners @activeStates.splice(i, 1)[0]
 
     return this unless @newScreen?
 
-    @states.forEach (state) =>
+    @activeStates.forEach (state) =>
       @removeStateEventListeners state
 
     @newScreen
@@ -33,21 +43,21 @@ class Engine.Screens.Statable extends Engine.Screen
       @game.removeEventListener event, @getEventListener.call(state, event)
 
   appendState: (name) ->
+    return if @hasStateActivated name
     state = @getState name
-    @states.push state
+    @activeStates.push state
     @addStateEventListeners state
     state.initialize?.call this
 
   prependState: (name) ->
+    return if @hasStateActivated name
     state = @getState name
-    @states.unshift state
+    @activeStates.unshift state
     @addStateEventListeners state
     state.initialize?.call this
 
-  getState: (name) ->
-    state = @__proto__.states[name]
+  hasStateActivated: (name) ->
+    _.pluck(@activeStates, "name").indexOf(name) isnt -1
 
-    if typeof state is "string"
-      @[state]
-    else
-      state
+  getState: (name) ->
+    _.find @states, (state) -> state.name is name

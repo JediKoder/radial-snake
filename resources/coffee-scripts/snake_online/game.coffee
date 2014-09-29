@@ -53,7 +53,6 @@ class SnakeOnline.Game
     newScreen.addEventListeners()
     @screen = newScreen
 
-
   loop: ->
     return unless @playing
 
