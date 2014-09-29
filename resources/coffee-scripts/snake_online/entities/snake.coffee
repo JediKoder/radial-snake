@@ -16,6 +16,7 @@ class SnakeOnline.Entities.Snake
     @shapes.forEach (shape) =>
       context.save()
       context.strokeStyle = @color
+      context.lineWidth = 3
       context.beginPath()
 
       if shape instanceof Engine.Geometry.Line

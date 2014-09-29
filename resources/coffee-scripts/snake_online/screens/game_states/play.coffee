@@ -50,4 +50,4 @@ SnakeOnline.Screens.Game::playState =
       if @snakes.length is 1
         @snakes[0].score++
 
-    this
+    on
