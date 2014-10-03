@@ -26,6 +26,13 @@ Object.defineProperties Object.prototype,
 
       prop
 
+  "setProperty":
+    enumerable: no
+    value: (keys..., value) ->
+      dstKey = keys.pop()
+      srcProp = @getProperty keys...
+      srcProp[dstKey] = value
+
   "forEach":
     enumerable: no
     value: (iterator) ->

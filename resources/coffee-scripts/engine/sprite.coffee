@@ -31,14 +31,9 @@ class Engine.Sprite
     context.restore()
 
   setPercentage: (key, relative, percents, adapters...) ->
-    keysChain = key.split "."
-    dstKey = keysChain.pop()
-    srcProp = @getProperty keysChain...
-    oldVal = srcProp[dstKey]
-    newVal = srcProp[dstKey] = percents * relative / 100
+    oldVal = @[key]
+    newVal = @[key] = percents * relative / 100
+    ratio = newVal / oldVal
 
     adapters.forEach (adapter) =>
-      keysChain = adapter.split "."
-      dstKey = keysChain.pop()
-      srcProp = @getProperty keysChain...
-      srcProp[dstKey] *= newVal / oldVal
+      @[adapter] *= ratio
