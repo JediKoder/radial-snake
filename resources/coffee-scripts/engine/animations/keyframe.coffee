@@ -76,10 +76,23 @@ class Engine.Animations.Keyframe
     keyframes.some (k, i) =>
       if k.frame >= (@frame || 1)
         index = i
-        true
+        yes
 
     keyframes[index - 1]
 
   _calcRelativeVal: (motion, k) ->
-    do (a = motion.start[k], b = motion.end[k], r = motion.ratio) ->
-      (b - a) * r + a
+    a = motion.start[k]
+    b = motion.end[k]
+    r = motion.ratio
+
+    easing = if r > 0
+      motion.start.easing
+    else
+      motion.end.easing
+
+    r = switch easing
+      when "in" then Math.sin r * Math.PI / 2
+      when "out" then Math.cos r * Math.PI / 2
+      else r
+
+    (b - a) * r + a

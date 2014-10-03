@@ -11,18 +11,17 @@ class SnakeOnline.Screens.Splash extends Engine.Screen
       y: this.height / 2 - 30
       width: splashSprite.width / 4
       height: splashSprite.height / 4
-      opacity: 0.4
+      opacity: 0
+      easing: "in"
       frame: 0
-    ,
-      width: splashSprite.width / 3
-      height: splashSprite.height / 3
-      opacity: 1
-      frame: 2000
     ,
       y: this.height / 2
       width: splashSprite.width / 3 + splashSprite.width * 0.05
       height: splashSprite.height / 3 + splashSprite.height * 0.05
-      frame: 5000
+      opacity: 1
+      frame: 3000
+    ,
+      frame: 3500
     ]
 
     @splashAnim.playing = yes
