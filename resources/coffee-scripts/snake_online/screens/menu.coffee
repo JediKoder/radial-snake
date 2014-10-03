@@ -12,7 +12,8 @@ class SnakeOnline.Screens.Menu extends Engine.Screen
     instructionsSprite = new Engine.Sprite assets.minecraftiaFont.createTexture "Press a key to start"
     instructionsSprite.align = "center"
     instructionsSprite.setPercentage "width", @width, 35, "height"
-    instructionsSprite.location = x: @width / 2, y: @height / 2
+    instructionsSprite.x = @width / 2
+    instructionsSprite.y = @height / 2
 
     @instructionsAnim = new Engine.Animations.Keyframe instructionsSprite, [
       opacity: 1

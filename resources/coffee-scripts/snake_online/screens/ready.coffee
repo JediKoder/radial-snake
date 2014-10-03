@@ -7,14 +7,14 @@ class SnakeOnline.Screens.Ready extends Engine.Screen
     readySprite = new Engine.Sprite assets.minecraftiaFont.createTexture "Ready"
     readySprite.align = "center"
     readySprite.setPercentage "width", @width, 15, "height"
-    readySprite.location = x: @width / 2, y: @height / 2
 
     @readyAnim = new Engine.Animations.Keyframe readySprite, [
-      location: x: @width / 2, y: @height / 2
+      x: @width / 2
+      y: @height / 2
       opacity: 1
       frame: 0
     ,
-      location: x: @width / 2, y: @height / 3
+      y: @height / 3
       opacity: 0
       frame: 700
     ]

@@ -5,13 +5,13 @@ class SnakeOnline.Screens.Splash extends Engine.Screen
 
     splashSprite = new Engine.Sprite assets.splashTexture
     splashSprite.align = "center"
-    splashSprite.location.x = @width / 2
+    splashSprite.x = @width / 2
 
     @splashAnim = new Engine.Animations.Keyframe splashSprite, [
+      y: this.height / 2 - 30
       width: splashSprite.width / 4
       height: splashSprite.height / 4
       opacity: 0.4
-      location: y: this.height / 2 - 30
       frame: 0
     ,
       width: splashSprite.width / 3
@@ -19,9 +19,9 @@ class SnakeOnline.Screens.Splash extends Engine.Screen
       opacity: 1
       frame: 2000
     ,
+      y: this.height / 2
       width: splashSprite.width / 3 + splashSprite.width * 0.05
       height: splashSprite.height / 3 + splashSprite.height * 0.05
-      location: y: this.height / 2
       frame: 5000
     ]
 

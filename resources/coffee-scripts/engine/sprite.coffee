@@ -1,8 +1,9 @@
 class Engine.Sprite
   constructor: (@texture) ->
+    @x = 0
+    @y = 0
     @width = texture.width
     @height = texture.height
-    @location = x: 0, y: 0
     @pivot = x: 0, y: 0
     @opacity = 1
 
@@ -22,8 +23,8 @@ class Engine.Sprite
       when "bottom" then @pivot = x: @width / 2, y: @height
 
     context.drawImage @texture,
-      @location.x - @pivot.x + offsetX
-      @location.y - @pivot.y + offsetY
+      @x - @pivot.x + offsetX
+      @y - @pivot.y + offsetY
       @width
       @height
 

@@ -6,20 +6,21 @@ class Engine.Animations.Keyframe
     @lastKeyframe = _.last keyframes
     @lastFrame = @lastKeyframe.frame
 
-    keyframes[0].forEach (k, option) =>
-      property = sprite[k]
+    @animables = [
+      "x"
+      "y"
+      "width"
+      "height"
+      "opacity"
+    ]
 
-      if typeof property is "object"
-        _.extend property, option
-      else
-        sprite[k] = option
+    @trimmedKeyframesMap = _.reduce @animables, (trimmedKeyframesMap, k) ->
+      trimmedKeyframesMap[k] = keyframes.filter (keyframe) -> keyframe[k]?
+      trimmedKeyframesMap
+    , {}
 
-    @widths = keyframes.filter (k) -> k.width?
-    @heights = keyframes.filter (k) -> k.height? 
-    @opacities = keyframes.filter (k) -> k.opacity? 
-    @locations = keyframes.filter (k) -> k.location?
-    @locations.xs = @locations.filter (k) -> k.location.x?
-    @locations.ys = @locations.filter (k) -> k.location.y?
+    keyframes[0].forEach (k, v) =>
+      sprite[k] = v if k in @animables
 
   draw: (context, offsetX, offsetY) ->
     @sprite.draw context, offsetX, offsetY
@@ -41,20 +42,19 @@ class Engine.Animations.Keyframe
         @frame = @age % @lastFrame
         @frame = @lastFrame - @frame if @age / @lastFrame % 2 >= 1
 
-    widthMo = @_getKeyframesMo @widths
-    heightMo = @_getKeyframesMo @heights
-    opacityMo = @_getKeyframesMo @opacities
-    xMo = @_getKeyframesMo @locations.xs
-    yMo = @_getKeyframesMo @locations.ys
+    @animables.forEach (k) =>
+      motion = @_getKeyframesMo k
+      return unless motion?
+      @sprite[k] = @_calcRelativeVal motion, k
 
-    @sprite.width = @_calcRelativeVal widthMo.start.width, widthMo.end.width, widthMo.ratio if widthMo?
-    @sprite.height = @_calcRelativeVal heightMo.start.height, heightMo.end.height, heightMo.ratio if heightMo?
-    @sprite.opacity = @_calcRelativeVal opacityMo.start.opacity, opacityMo.end.opacity, opacityMo.ratio if opacityMo?
-    @sprite.location.x = @_calcRelativeVal xMo.start.location.x, xMo.end.location.x, xMo.ratio if xMo?
-    @sprite.location.y = @_calcRelativeVal yMo.start.location.y, yMo.end.location.y, yMo.ratio if yMo?
+  _getKeyframesMo: (k) ->
+    keyframes = @trimmedKeyframesMap[k]
 
-  _getKeyframesMo: (keyframes) ->
-    return if keyframes.length < 2 or @frame > _.last(keyframes).frame
+    if not keyframes? or
+       keyframes.length < 2 or
+       @frame > _.last(keyframes).frame
+      return
+
     start = @_findStartKeyframe keyframes
     end = @_findEndKeyframe keyframes
     ratio = @_getKeyframesRatio start, end
@@ -80,5 +80,6 @@ class Engine.Animations.Keyframe
 
     keyframes[index - 1]
 
-  _calcRelativeVal: (a, b, r) ->
-    (b - a) * r + a
+  _calcRelativeVal: (motion, k) ->
+    do (a = motion.start[k], b = motion.end[k], r = motion.ratio) ->
+      (b - a) * r + a
