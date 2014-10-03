@@ -1,9 +1,9 @@
 class SnakeOnline.Screens.Splash extends Engine.Screen
   constructor: (game, assets) ->
     super game, assets
-    @load()
+    @loadsize = 2
 
-    splashSprite = new Engine.Sprite @splashTexture
+    splashSprite = new Engine.Sprite assets.splashTexture
     splashSprite.align = "center"
     splashSprite.location.x = @width / 2
 
@@ -28,28 +28,24 @@ class SnakeOnline.Screens.Splash extends Engine.Screen
     @splashAnim.playing = yes
 
   draw: (context) ->
-    super context
     @splashAnim.draw context
 
   update: (span) ->
     @splashAnim.update span
 
     if not @splashAnim.playing and @loaded
-      new SnakeOnline.Screens.Menu @game, @assets
+      @appendScreen SnakeOnline.Screens.Menu
+      off
     else
-      this
+      on
 
   load: ->
-    loadedAssets = 0
+    logoTexture = new Image
+    logoTexture.onload = @onload
+    logoTexture.src = "/textures/logo.png"
 
-    @assets =
-      logoTexture: new Image
-      minecraftiaFont: new Engine.Font
+    minecraftiaFont = new Engine.Font
+    minecraftiaFont.onload = @onload
+    minecraftiaFont.src = "/fonts/minecraftia"
 
-    _.values(@assets).forEach (v, i, values) =>
-      v.onload = => 
-        @loaded = yes if ++loadedAssets is values.length
-
-      switch i
-        when 0 then v.src = "/textures/logo.png"
-        when 1 then v.src = "/fonts/minecraftia"
+    {logoTexture, minecraftiaFont}

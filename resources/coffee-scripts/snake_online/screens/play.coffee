@@ -1,5 +1,7 @@
-SnakeOnline.Screens.Game::playState =
-  initialize: ->
+class SnakeOnline.Screens.Play extends Engine.Screen
+  constructor: (game, assets) ->
+    super game, assets
+
     @snakes = [
       new SnakeOnline.Entities.Snake(
         @width / 4

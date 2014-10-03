@@ -11,17 +11,16 @@ class SnakeOnline.Game
     canvas.addEventListener "keydown", @onKeyDown.bind(this), no
     canvas.addEventListener "keyup", @onKeyUp.bind(this), no
 
+    @events = []
+    @screens = []
     @context = canvas.getContext "2d"
     @bufferedCanvas = doc.createElement "canvas"
     @bufferedContext = @bufferedCanvas.getContext "2d"
     @bufferedCanvas.width = canvas.width
     @bufferedCanvas.height = canvas.height
     @keyStates = new Engine.KeyStates
-    @screen = new Screen this
+    @appendScreen new Screen this
     @lastUpdate = new Date
-    @events = []
-
-    @screen.addEventListeners()
 
   draw: ->
     if @debugging
@@ -31,7 +30,7 @@ class SnakeOnline.Game
       @context.beginPath()
       @context.rect 0, 0, @canvas.width, @canvas.height
       @context.fill()
-      @screen.draw @context
+      @drawScreens @context
     else
       @bufferedContext.restore()
       @bufferedContext.fillStyle = "white"
@@ -39,19 +38,32 @@ class SnakeOnline.Game
       @bufferedContext.beginPath()
       @bufferedContext.rect 0, 0, @canvas.width, @canvas.height
       @bufferedContext.fill()
-      @screen.draw @bufferedContext
+      @drawScreens @bufferedContext
       @context.drawImage @bufferedCanvas, 0, 0
+
+  drawScreens: (context) ->
+    context.fillStyle = "black"
+    context.beginPath()
+    context.rect 0, 0, @canvas.width, @canvas.height
+    context.fill()
+
+    @screens.forEach (screen) ->
+      screen.draw? context
 
   update: ->
     lastUpdate = @lastUpdate
     currUpdate = @lastUpdate = new Date
     span = currUpdate.getTime() - lastUpdate.getTime()
-    newScreen = @screen.update span / @speed
-    return if newScreen.creationDate is @screen.creationDate
+    @updateScreens span / @speed
 
-    @screen.removeEventListeners()
-    newScreen.addEventListeners()
-    @screen = newScreen
+  updateScreens: (span) ->
+    garbage = []
+
+    @screens.forEach (screen, i) =>
+      garbage.push i if !screen.update span
+
+    garbage.forEach (i) =>
+      @screens.splice(i, 1)[0].removeEventListeners()
 
   loop: ->
     return unless @playing
@@ -68,6 +80,14 @@ class SnakeOnline.Game
 
   pause: ->
     @playing = no
+
+  appendScreen: (screen) ->
+    @screens.push screen
+    screen.addEventListeners()
+
+  prependScreen: (screen) ->
+    @screens.unshift screen
+    screen.addEventListeners()
 
   addEventListener: (type, listener, target) ->
     bindedListener = listener.bind target

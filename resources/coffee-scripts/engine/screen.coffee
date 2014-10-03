@@ -1,17 +1,31 @@
 class Engine.Screen
-  constructor: (@game, assets) ->
-    _.extend this, assets
+  constructor: (@game, @assets) ->
+    {@width
+     @height} = game.canvas
 
-    @width = game.canvas.width
-    @height = game.canvas.height
-    @keyStates = game.keyStates
+    {@keyStates} = game
+
     @creationDate = new Date
+    loadsize = undefined
 
-  draw: (context) ->
-    context.fillStyle = "black"
-    context.beginPath()
-    context.rect 0, 0, @width, @height
-    context.fill()
+    Object.defineProperty this, "loadsize"
+      get: ->
+        loadsize
+      set: (val) ->
+        loadsize = val
+
+        if loadsize
+          @onload = _.after loadsize, @onload.bind(this)
+          @loadedAssets = @load()
+        else
+          @loadedAssets = @load()
+          @onload()
+
+  appendScreen: (Screen) ->
+    @game.appendScreen new Screen @game, @loadedAssets
+
+  prependScreen: (Screen) ->
+    @game.prependScreen new Screen @game, @loadedAssets
 
   addEventListeners: ->
     @events?.forEach (event) =>
@@ -28,3 +42,9 @@ class Engine.Screen
       listener
     else
       @[listener]
+
+  onload: ->
+    @loaded = yes
+
+  createScreen: (Screen) ->
+    new Screen @game, @loadedAssets
