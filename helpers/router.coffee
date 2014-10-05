@@ -1,6 +1,6 @@
 routeModules = [
-  require "./pages"
-  require "./endpoints"
+  require "./../routes/pages"
+  require "./../routes/endpoints"
 ]
 
 exports.implement = (server) ->

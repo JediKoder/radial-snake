@@ -1,5 +1,5 @@
 Hapi = require "hapi"
-Router = require "./routes/router"
+Router = require "./helpers/router"
 IpGrabber = require "./helpers/ip_grabber"
 
 localIp = IpGrabber.local()
