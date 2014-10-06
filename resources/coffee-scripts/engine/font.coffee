@@ -1,7 +1,7 @@
 class Engine.Font
   constructor: ->
     src = undefined
-    @sprites = {}
+    @spriteMap = {}
 
     Object.defineProperty this, "src"
       get: ->
@@ -18,13 +18,17 @@ class Engine.Font
         $.getJSON "#{src}.json", (@data) =>
           done?()
 
-  createTexture: (text) ->
+  createTexture: (text, options) ->
+    {noOffsets, noSpaces} = options if options?
     canvas = doc.createElement "canvas"
     context = canvas.getContext "2d"
     canvas.height = @data.height
 
-    canvas.width = _.reduce text, (width, char) =>
-      width + @data.chars[char].width
+    canvas.width = _.reduce text, (width, c) =>
+      width + if noSpaces
+        @get(c).width
+      else
+        @data.chars[c].width
     , 0
 
     offset = 0
@@ -34,13 +38,21 @@ class Engine.Font
 
     .forEach (sprite, i) =>
       char = @data.chars[text.charAt(i)]
-      sprite.draw context, offset + char.offset.x, char.offset.y
-      offset += char.width
+
+      if noOffsets
+        sprite.draw context, offset
+      else
+        sprite.draw context, offset + char.offset.x, char.offset.y
+
+      if noSpaces
+        offset += sprite.width
+      else
+        offset += char.width
 
     canvas
 
   get: (char) ->
-    return @sprites[char] if @sprites[char]?
+    return @spriteMap[char] if @spriteMap[char]?
 
     {x, y, width, height} = @data.chars[char].rect
     canvas = doc.createElement "canvas"
@@ -49,4 +61,4 @@ class Engine.Font
     canvas.height = height
     context.drawImage @atlas, x, y, width, height, 0, 0, width, height
 
-    @sprites[char] = new Engine.Sprite canvas
+    @spriteMap[char] = new Engine.Sprite canvas
