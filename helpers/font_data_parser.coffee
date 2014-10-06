@@ -3,7 +3,20 @@ Async = require "async"
 Fs = require "fs"
 _ = require "underscore"
 
-exports.xmlToJSON = (path, callback) ->
+exports.xmlsToJsons = (path, callback) ->
+  Fs.readdir path, (err, files) ->
+    return callback? err if err
+
+    fileNames = _.uniq files.map (file) ->
+      file.split(".")[0]
+
+    Async.each fileNames
+    , (fileName, callback) -> 
+      exports.xmlToJson "#{path}/#{fileName}", callback
+    , (err) -> 
+      callback? err
+
+exports.xmlToJson = (path, callback) ->
   Async.waterfall [
     (next) -> Fs.readFile "#{path}.xml", (err, xmlBuf) ->
       return next err if err

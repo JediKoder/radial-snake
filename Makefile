@@ -1,3 +1,6 @@
+font-data-parse:
+	coffee -e 'require("./helpers/font_data_parser").xmlsToJsons "./resources/assets/fonts", (err) -> throw err if err'
+
 build:
 	coffee -o ./resources/scripts -c ./resources/coffee-scripts
 

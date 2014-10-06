@@ -8,7 +8,7 @@ class Engine.Screen
     @creationDate = new Date
     loadsize = undefined
 
-    Object.defineProperty this, "loadsize"
+    Object.defineProperty this, "loadsize",
       get: ->
         loadsize
       set: (val) ->

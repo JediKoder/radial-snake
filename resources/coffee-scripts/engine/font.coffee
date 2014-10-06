@@ -3,7 +3,7 @@ class Engine.Font
     src = undefined
     @spriteMap = {}
 
-    Object.defineProperty this, "src"
+    Object.defineProperty this, "src",
       get: ->
         src
 
