@@ -1,2 +1,2 @@
 $(doc).ready ->
-  new SnakeOnline.Game(doc.getElementById("gameCanvas"), SnakeOnline.Screens.Init, no).play()
+  new SnakeOnline.Game($("#gameCanvas")[0], SnakeOnline.Screens.Init, no).play()

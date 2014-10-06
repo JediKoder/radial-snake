@@ -1,26 +1,10 @@
 class Engine.Font
   constructor: ->
-    src = undefined
-    @spriteMap = {}
-
-    Object.defineProperty this, "src",
-      get: ->
-        src
-
-      set: (url) ->
-        src = url
-        done = _.after 2, @onload if @onload?
-
-        @atlas = new Image
-        @atlas.onload = done
-        @atlas.src = "#{src}.png"
-
-        $.getJSON "#{src}.json", (@data) =>
-          done?()
+    @spritesMap = {}
 
   createTexture: (text, options) ->
     {noOffsets, noSpaces} = options if options?
-    canvas = doc.createElement "canvas"
+    canvas = doc.newEl "canvas"
     context = canvas.getContext "2d"
     canvas.height = @data.height
 
@@ -52,13 +36,31 @@ class Engine.Font
     canvas
 
   get: (char) ->
-    return @spriteMap[char] if @spriteMap[char]?
+    return @spritesMap[char] if @spritesMap[char]?
 
     {x, y, width, height} = @data.chars[char].rect
-    canvas = doc.createElement "canvas"
+    canvas = doc.newEl "canvas"
     context = canvas.getContext "2d"
     canvas.width = width
     canvas.height = height
     context.drawImage @atlas, x, y, width, height, 0, 0, width, height
 
-    @spriteMap[char] = new Engine.Sprite canvas
+    @spritesMap[char] = new Engine.Sprite canvas
+
+  Object.defineProperties @proto,
+    "src":
+      set: (src) ->
+        @__defineGetter__ "src", -> src
+        done = _.after 2, @onload if @onload?
+
+        @atlas = new Image
+        @atlas.onload = done
+        @atlas.src = "#{src}.png"
+
+        $.getJSON "#{src}.json", (@data) =>
+          done?()
+
+    "color":
+      set: (color) ->
+        @__defineGetter__ "color", -> color
+        @spritesMap = {}

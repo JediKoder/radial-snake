@@ -1,3 +1,5 @@
+HTMLDocument::newEl = HTMLDocument::createElement
+
 Object.defineProperties self,
   "doc":
     get: ->
@@ -16,6 +18,10 @@ Object.defineProperties self,
       arguments.callee.caller
 
 Object.defineProperties Object.prototype,
+  "proto":
+    get: ->
+      @prototype
+
   "getProperty":
     enumerable: no
     value: (keys...) ->
