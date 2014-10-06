@@ -31,12 +31,10 @@ class SnakeOnline.Screens.Splash extends Engine.Screen
 
   update: (span) ->
     @splashAnim.update span
-
-    if not @splashAnim.playing and @loaded
-      @appendScreen SnakeOnline.Screens.Menu
-      off
-    else
-      on
+    return if @splashAnim.playing or not @loaded
+      
+    @appendScreen SnakeOnline.Screens.Menu
+    @remove()
 
   load: ->
     logoTexture = new Image

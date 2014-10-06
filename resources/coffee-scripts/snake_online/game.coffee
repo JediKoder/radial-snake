@@ -57,13 +57,8 @@ class SnakeOnline.Game
     @updateScreens span / @speed
 
   updateScreens: (span) ->
-    garbage = []
-
-    @screens.forEach (screen, i) =>
-      garbage.push i if !screen.update span
-
-    garbage.forEach (i) =>
-      @screens.splice(i, 1)[0].removeEventListeners()
+    @screens.forEach (screen) ->
+      screen.update? span
 
   loop: ->
     return unless @playing
@@ -88,6 +83,10 @@ class SnakeOnline.Game
   prependScreen: (screen) ->
     @screens.unshift screen
     screen.addEventListeners()
+
+  removeScreen: (screen) ->
+    @screens = _(@screens).without screen
+    screen.removeEventListeners()
 
   addEventListener: (type, listener, target) ->
     bindedListener = listener.bind target

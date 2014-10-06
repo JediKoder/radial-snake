@@ -4,11 +4,9 @@ class SnakeOnline.Screens.Init extends Engine.Screen
     @loadsize = 1
 
   update: (span) ->
-    if @loaded
-      @appendScreen SnakeOnline.Screens.Splash
-      off
-    else
-      on
+    return unless @loaded
+    @appendScreen SnakeOnline.Screens.Splash
+    @remove()
 
   load: ->
     splashTexture = new Image

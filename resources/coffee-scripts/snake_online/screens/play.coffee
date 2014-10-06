@@ -1,6 +1,7 @@
 class SnakeOnline.Screens.Play extends Engine.Screen
   constructor: (game, assets) ->
     super game, assets
+    @loadedAssets = assets
 
     @snakes = [
       new SnakeOnline.Entities.Snake(
@@ -30,6 +31,8 @@ class SnakeOnline.Screens.Play extends Engine.Screen
       )
     ]
 
+    @appendScreen SnakeOnline.Screens.Score, @snakes
+
   draw: (context) ->
     @snakes.forEach (snake) ->
       snake.draw context
@@ -51,5 +54,3 @@ class SnakeOnline.Screens.Play extends Engine.Screen
       @snakes.splice index, 1
       if @snakes.length is 1
         @snakes[0].score++
-
-    on

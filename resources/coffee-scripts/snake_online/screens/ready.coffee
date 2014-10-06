@@ -4,6 +4,8 @@ class SnakeOnline.Screens.Ready extends Engine.Screen
 
   constructor: (game, assets) ->
     super game, assets
+    @loadedAssets = assets
+
     readySprite = new Engine.Sprite assets.minecraftiaFont.createTexture "Ready"
     readySprite.align = "center"
     readySprite.setPercentage "width", @width, 15, "height"
@@ -23,17 +25,15 @@ class SnakeOnline.Screens.Ready extends Engine.Screen
     @readyAnim.draw context
 
   update: (span) ->
-    unless @ready
-      on
-    else if @game.screens.length is 1
+    return unless @ready
+
+    if @game.screens.length is 1
       @readyAnim.playing = yes
       @prependScreen SnakeOnline.Screens.Play
-      on
     else if @readyAnim.playing
       @readyAnim.update span
-      on
     else
-      off
+      @remove()
 
   onKeyDown: ->
     @ready = yes

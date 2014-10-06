@@ -21,11 +21,16 @@ class Engine.Screen
           @loadedAssets = @load()
           @onload()
 
-  appendScreen: (Screen) ->
-    @game.appendScreen new Screen @game, @loadedAssets
+  appendScreen: (Screen, screenArgs...) ->
+    screen = new Screen @game, @loadedAssets, screenArgs...
+    @game.appendScreen screen
 
-  prependScreen: (Screen) ->
-    @game.prependScreen new Screen @game, @loadedAssets
+  prependScreen: (Screen, screenArgs...) ->
+    screen = new Screen @game, @loadedAssets, screenArgs...
+    @game.prependScreen screen
+
+  remove: ->
+    @game.removeScreen this
 
   addEventListeners: ->
     @events?.forEach (event) =>

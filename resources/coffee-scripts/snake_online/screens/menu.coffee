@@ -33,10 +33,9 @@ class SnakeOnline.Screens.Menu extends Engine.Screen
   update: (span) ->
     if @keyPressed
       @appendScreen SnakeOnline.Screens.Ready
-      off
+      @remove()
     else
       @instructionsAnim.update span
-      on
 
   onKeyDown: (e) ->
     @keyPressed = yes
