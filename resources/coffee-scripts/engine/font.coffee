@@ -1,45 +1,51 @@
 class Engine.Font
   constructor: ->
-    @spritesMap = {}
+    @charSpritesMap = {}
 
   createTexture: (text, options) ->
     {noOffsets, noSpaces} = options if options?
     canvas = doc.newEl "canvas"
     context = canvas.getContext "2d"
-    canvas.height = @data.height
+    height = canvas.height = @data.height
 
-    canvas.width = _.reduce text, (width, c) =>
+    width = canvas.width = _.reduce text, (width, c) =>
       width + if noSpaces
-        @get(c).width
+        @getCharSprite(c).width
       else
         @data.chars[c].width
     , 0
 
+    if @size?
+      ratio = @size / @data.size
+      canvas.height *= ratio
+      canvas.width *= ratio
+      context.scale ratio, ratio
+
     offset = 0
 
     text.map (i, c) =>
-      @get c
+      @getCharSprite c
 
-    .forEach (sprite, i) =>
-      char = @data.chars[text.charAt(i)]
+    .forEach (charSprite, i) =>
+      charData = @data.chars[text.charAt(i)]
 
       if noOffsets
-        sprite.draw context, offset
+        charSprite.draw context, offset
       else
-        sprite.draw context, offset + char.offset.x, char.offset.y
+        charSprite.draw context, offset + charData.offset.x, charData.offset.y
 
       if noSpaces
-        offset += sprite.width
+        offset += charSprite.width
       else
-        offset += char.width
+        offset += charData.width
 
       if @color
         overlayCanvas = doc.newEl "canvas"
         overlayContext = overlayCanvas.getContext "2d"
-        overlayCanvas.width = canvas.width
-        overlayCanvas.height = canvas.height
+        overlayCanvas.width = width
+        overlayCanvas.height = height
         overlayContext.beginPath()
-        overlayContext.rect 0, 0, canvas.width, canvas.height
+        overlayContext.rect 0, 0, width, height
         overlayContext.fillStyle = @color
         overlayContext.fill()
 
@@ -50,8 +56,8 @@ class Engine.Font
 
     canvas
 
-  get: (char) ->
-    return @spritesMap[char] if @spritesMap[char]?
+  getCharSprite: (char) ->
+    return @charSpritesMap[char] if @charSpritesMap[char]?
 
     {x, y, width, height} = @data.chars[char].rect
     canvas = doc.newEl "canvas"
@@ -60,7 +66,7 @@ class Engine.Font
     canvas.height = height
     context.drawImage @atlas, x, y, width, height, 0, 0, width, height
 
-    @spritesMap[char] = new Engine.Sprite canvas
+    @charSpritesMap[char] = new Engine.Sprite canvas
 
   @::__defineSetter__ "src", (src) ->
     @__defineGetter__ "src", -> src
