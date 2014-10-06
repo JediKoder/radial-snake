@@ -4,12 +4,16 @@ class SnakeOnline.Screens.Score extends Engine.Screen
     @scoreSprites = []
     @scores = []
 
+    snakes.forEach (snake, i) ->
+      snake.index = i
+
   draw: (context) ->
     @scoreSprites.forEach (scoreSprite) ->
       scoreSprite.draw context
 
   update: (span) ->
-    @snakes.forEach (snake, i) =>
+    @snakes.forEach (snake) =>
+      i = snake.index
       return if @scores[i] is snake.score
       @scoreSprites[i] = @createScoreSprite snake, i
       @scores[i] = snake.score
@@ -24,7 +28,7 @@ class SnakeOnline.Screens.Score extends Engine.Screen
 
     sprite.setPercentage "width", @width, 4, "height"
 
-    switch i
+    switch snake.index
       when 0
         sprite.align = "top-left"
       when 1

@@ -20,7 +20,7 @@ class SnakeOnline.Game
     @bufferedCanvas.height = canvas.height
     @keyStates = new Engine.KeyStates
     @appendScreen new Screen this
-    @lastUpdate = new Date
+    @lastUpdate = new Date().getTime()
 
   draw: ->
     if @debugging
@@ -52,12 +52,13 @@ class SnakeOnline.Game
 
   update: ->
     lastUpdate = @lastUpdate
-    currUpdate = @lastUpdate = new Date
-    span = currUpdate.getTime() - lastUpdate.getTime()
+    currUpdate = @lastUpdate = new Date().getTime()
+    span = currUpdate - lastUpdate
     @updateScreens span / @speed
 
   updateScreens: (span) ->
     @screens.forEach (screen) ->
+      screen.age = @lastUpdate - screen.creation
       screen.update? span
 
   loop: ->

@@ -1,8 +1,8 @@
 class Engine.Screen
   constructor: (@game, @assets) ->
-    @creationDate = new Date
+    @creation = new Date().getTime()
     {@keyStates} = game
-    
+
     {@width
      @height} = game.canvas
 
