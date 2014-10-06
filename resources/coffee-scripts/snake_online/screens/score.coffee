@@ -20,6 +20,7 @@ class SnakeOnline.Screens.Score extends Engine.Screen
 
   createScoreSprite: (snake, i) ->
     minecraftiaFont = @assets.minecraftiaFont
+    minecraftiaFont.save()
     minecraftiaFont.color = snake.color
 
     sprite = new Engine.Sprite minecraftiaFont.createTexture "#{snake.score}",
@@ -35,5 +36,5 @@ class SnakeOnline.Screens.Score extends Engine.Screen
         sprite.align = "top-right"
         sprite.x = @width
 
-    delete minecraftiaFont.color
+    minecraftiaFont.restore()
     sprite

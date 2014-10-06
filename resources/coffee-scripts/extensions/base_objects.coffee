@@ -111,4 +111,3 @@ Object.defineProperties Number.prototype,
             when ">" then this > num
             when ">=" then this >= num
             else this is num
-      

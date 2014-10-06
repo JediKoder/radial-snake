@@ -14,7 +14,7 @@ class Engine.Animations.Keyframe
       "opacity"
     ]
 
-    @trimmedKeyframesMap = _.reduce @animables, (trimmedKeyframesMap, k) ->
+    @trimmedKeyframesMap = @animables.reduce (trimmedKeyframesMap, k) ->
       trimmedKeyframesMap[k] = keyframes.filter (keyframe) -> keyframe[k]?
       trimmedKeyframesMap
     , {}

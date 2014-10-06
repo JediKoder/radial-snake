@@ -1,5 +1,6 @@
-class Engine.Font
+class Engine.Font extends Restoreable
   constructor: ->
+    super "color"
     @charSpritesMap = {}
 
   createTexture: (text, options) ->
