@@ -12,14 +12,17 @@ class Engine.Geometry.Circle
       @rad2 = rad2.trim 9, "floor"
 
   getX: (rad) ->
+    rad = rad.trim 9
     return unless rad.isBetween @rad1, @rad2
     (@r * Math.cos(rad) + @x).trim 9
 
   getY: (rad) ->
+    rad = rad.trim 9
     return unless rad.isBetween @rad1, @rad2
     (@r * Math.sin(rad) + @y).trim 9
 
   getPoint: (rad) ->
+    rad = rad.trim 9
     return unless rad.isBetween @rad1, @rad2
     x: (@r * Math.cos(rad) + @x).trim 9
     y: (@r * Math.sin(rad) + @y).trim 9
