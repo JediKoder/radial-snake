@@ -15,13 +15,15 @@ class SnakeOnline.Screens.Score extends Engine.Screen
       @scores[i] = snake.score
 
   createScoreSprite: (snake, i) ->
-    sprite = new Engine.Sprite @assets.minecraftiaFont.createTexture "#{snake.score}",
+    minecraftiaFont = @assets.minecraftiaFont
+    minecraftiaFont.color = snake.color
+
+    sprite = new Engine.Sprite minecraftiaFont.createTexture "#{snake.score}",
       noOffsets: true
       noSpaces: true
 
     sprite.setPercentage "width", @width, 4, "height"
 
-    # TODO: Change color of font
     switch i
       when 0
         sprite.align = "top-left"
@@ -29,4 +31,5 @@ class SnakeOnline.Screens.Score extends Engine.Screen
         sprite.align = "top-right"
         sprite.x = @width
 
+    delete minecraftiaFont.color
     sprite

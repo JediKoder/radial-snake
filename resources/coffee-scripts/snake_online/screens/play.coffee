@@ -10,7 +10,7 @@ class SnakeOnline.Screens.Play extends Engine.Screen
         50
         Math.PI / 4
         100
-        "red"
+        "FireBrick"
         @keyStates
         keys:
           left: 37 # left
@@ -23,7 +23,7 @@ class SnakeOnline.Screens.Play extends Engine.Screen
         50
         -Math.PI / 4 * 3
         100
-        "azure"
+        "DodgerBlue"
         @keyStates
         keys:
           left: 65 # a

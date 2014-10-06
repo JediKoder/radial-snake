@@ -33,6 +33,21 @@ class Engine.Font
       else
         offset += char.width
 
+      if @color
+        overlayCanvas = doc.newEl "canvas"
+        overlayContext = overlayCanvas.getContext "2d"
+        overlayCanvas.width = canvas.width
+        overlayCanvas.height = canvas.height
+        overlayContext.beginPath()
+        overlayContext.rect 0, 0, canvas.width, canvas.height
+        overlayContext.fillStyle = @color
+        overlayContext.fill()
+
+        context.save()
+        context.globalCompositeOperation = "source-in"
+        context.drawImage overlayCanvas, 0, 0
+        context.restore()
+
     canvas
 
   get: (char) ->
@@ -47,20 +62,13 @@ class Engine.Font
 
     @spritesMap[char] = new Engine.Sprite canvas
 
-  Object.defineProperties @proto,
-    "src":
-      set: (src) ->
-        @__defineGetter__ "src", -> src
-        done = _.after 2, @onload if @onload?
+  @::__defineSetter__ "src", (src) ->
+    @__defineGetter__ "src", -> src
+    done = _.after 2, @onload if @onload?
 
-        @atlas = new Image
-        @atlas.onload = done
-        @atlas.src = "#{src}.png"
+    @atlas = new Image
+    @atlas.onload = done
+    @atlas.src = "#{src}.png"
 
-        $.getJSON "#{src}.json", (@data) =>
-          done?()
-
-    "color":
-      set: (color) ->
-        @__defineGetter__ "color", -> color
-        @spritesMap = {}
+    $.getJSON "#{src}.json", (@data) =>
+      done?()
