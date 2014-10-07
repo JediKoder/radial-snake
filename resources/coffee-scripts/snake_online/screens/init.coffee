@@ -1,7 +1,6 @@
 class SnakeOnline.Screens.Init extends Engine.Screen
   constructor: (game) ->
     super game
-    @loadsize = 1
 
   update: (span) ->
     return unless @loaded

@@ -1,7 +1,6 @@
 class SnakeOnline.Screens.Splash extends Engine.Screen
   constructor: (game, assets) ->
     super game, assets
-    @loadsize = 2
 
     splashSprite = new Engine.Sprite assets.splashTexture
     splashSprite.align = "center"

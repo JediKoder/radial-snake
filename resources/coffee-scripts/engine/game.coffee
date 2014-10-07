@@ -8,8 +8,8 @@ class Engine.Game
     canvas.focus()
 
     canvas.addEventListener "mousedown", canvas.focus, no
-    canvas.addEventListener "keydown", @onKeyDown.bind(this), no
-    canvas.addEventListener "keyup", @onKeyUp.bind(this), no
+    canvas.addEventListener "keydown", onKeyDown.bind(this), no
+    canvas.addEventListener "keyup", onKeyUp.bind(this), no
 
     @events = []
     @screens = []
@@ -99,16 +99,16 @@ class Engine.Game
     @canvas.addEventListener type, bindedListener, no
 
   removeEventListener: (type, listener) ->
-    event = _.find @events, (e) ->
+    event = _(@events).find (e) ->
       e.listener is listener
 
-    @events = _.without @events, event
+    @events = _(@events).without event
     @canvas.removeEventListener type, event.bindedListener, no
 
-  onKeyDown: (e) ->
+  onKeyDown = (e) ->
     e.preventDefault()
     @keyStates.add e.keyCode
 
-  onKeyUp: (e) ->
+  onKeyUp = (e) ->
     e.preventDefault()
     @keyStates.remove e.keyCode

@@ -1,10 +1,19 @@
 class Engine.Screen
   constructor: (@game, @assets) ->
     @creation = new Date().getTime()
+    @loadsize = 0
+
     {@keyStates} = game
 
     {@width
      @height} = game.canvas
+
+    @loadedAssets = @load?()
+
+    if @loadsize
+      @onload = _.after @loadsize, -> @loaded = yes
+    else
+      @loaded = yes
 
   appendScreen: (Screen, screenArgs...) ->
     screen = new Screen @game, @loadedAssets, screenArgs...
@@ -33,18 +42,14 @@ class Engine.Screen
     else
       @[listener]
 
-  onload: ->
-    @loaded = yes
-
   createScreen: (Screen) ->
     new Screen @game, @loadedAssets
 
-  @::__defineSetter__ "loadsize", (loadsize) ->
-    @__defineGetter__ "loadsize", -> loadsize
+  Object.defineProperties @proto,
+    "onload":
+      get: ->
+        @loadsize++
+        => @onload()
 
-    if loadsize
-      @onload = _.after loadsize, @onload.bind(this)
-      @loadedAssets = @load()
-    else
-      @loadedAssets = @load()
-      @onload()
+      set: (onload) ->
+        @__defineGetter__ "onload", -> onload

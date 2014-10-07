@@ -2,7 +2,7 @@ class Engine.Text
   constructor: (@text, @font) ->
     @location = x: 0, y: 0
     @opacity = 1
-    @color = "black"
+    @color = "white"
 
   draw: (context, offsetX = 0, offsetY = 0) ->
     context.save()

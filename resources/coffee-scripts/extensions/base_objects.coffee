@@ -1,9 +1,9 @@
 HTMLDocument::newEl = HTMLDocument::createElement
 
 Object.defineProperties self,
-  "doc":
+  "callee":
     get: ->
-      document
+      arguments.callee.caller
   ,
   "args":
     get: ->
@@ -13,9 +13,9 @@ Object.defineProperties self,
     get: ->
       arguments.callee.caller.caller
   ,
-  "callee":
+  "doc":
     get: ->
-      arguments.callee.caller
+      document
 
 Object.defineProperties Object.prototype,
   "proto":
@@ -23,7 +23,6 @@ Object.defineProperties Object.prototype,
       @prototype
 
   "getProperty":
-    enumerable: no
     value: (keys...) ->
       prop = this
 
@@ -33,32 +32,29 @@ Object.defineProperties Object.prototype,
       prop
 
   "setProperty":
-    enumerable: no
     value: (keys..., value) ->
       dstKey = keys.pop()
       srcProp = @getProperty keys...
       srcProp[dstKey] = value
 
   "forEach":
-    enumerable: no
     value: (iterator) ->
       for k, v of this
         if @hasOwnProperty(k)
           iterator k, v, this
 
   "map":
-    enumerable: no
     value: (iterator) ->
       map = []
 
-      @forEach (k, v, obj) ->
-        map.push iterator(k, v, obj)
+      for k, v of this
+        if @hasOwnProperty(k)
+          map.push iterator(k, v, this)
 
       map
 
 Object.defineProperties Array.prototype,
   "common":
-    enumerable: no
     value: (iterator) ->
       iterator ?= (a, b) ->
         a is b
@@ -73,25 +69,22 @@ Object.defineProperties Array.prototype,
 
 Object.defineProperties Number.prototype,
   "trim":
-    enumerable: no
     value: (decimals, mode = "round") ->
       Math[mode](this * Math.pow(10, decimals)) / Math.pow(10, decimals)
 
   "isBetween":
-    enumerable: no
     value: (num1, num2, percision) ->
       this.compare(Math.min(num1, num2), ">=", percision) and
       this.compare(Math.max(num1, num2), "<=", percision)
 
   "compare":
-    enumerable: no
     value: (num) ->
-      switch args.length
+      switch arguments.length
         when 2
-          percision = args[1]
+          percision = arguments[1]
         when 3
-          method = args[1]
-          percision = args[2]
+          method = arguments[1]
+          percision = arguments[2]
 
       switch percision
         when "f"

@@ -70,7 +70,7 @@ class Engine.Geometry.Circle
       x: p.x.trim 9
       y: p.y.trim 9
 
-    interPoints = _.uniq interPoints, (p) ->
+    interPoints = _(interPoints).uniq (p) ->
       "(#{p.x}, #{p.y})"
 
     [this, c].forEach (c) ->
@@ -108,7 +108,7 @@ class Engine.Geometry.Circle
       @hasPoint(p.x, p.y) and
       l.boundsHasPoint(p.x, p.y)
 
-    interPoints = _.uniq interPoints, (p) ->
+    interPoints = _(interPoints).uniq (p) ->
       "(#{p.x}, #{p.y})"
 
     interPoints if interPoints.length > 0

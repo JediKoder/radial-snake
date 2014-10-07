@@ -43,34 +43,34 @@ class Engine.Animations.Keyframe
         @frame = @lastFrame - @frame if @age / @lastFrame % 2 >= 1
 
     @animables.forEach (k) =>
-      motion = @_getKeyframesMo k
+      motion = getKeyframesMo.call this, k
       return unless motion?
-      @sprite[k] = @_calcRelativeVal motion, k
+      @sprite[k] = calcRelativeVal.call this, motion, k
 
-  _getKeyframesMo: (k) ->
+  getKeyframesMo = (k) ->
     keyframes = @trimmedKeyframesMap[k]
 
     if not keyframes? or
        keyframes.length < 2 or
-       @frame > _.last(keyframes).frame
+       @frame > _(keyframes).last().frame
       return
 
-    start = @_findStartKeyframe keyframes
-    end = @_findEndKeyframe keyframes
-    ratio = @_getKeyframesRatio start, end
+    start = findStartKeyframe.call this, keyframes
+    end = findEndKeyframe.call this, keyframes
+    ratio = getKeyframesRatio.call this, start, end
 
     start: start
     end: end
     ratio: ratio
 
-  _getKeyframesRatio: (start, end) ->
+  getKeyframesRatio = (start, end) ->
     (@frame - start.frame) / (end.frame - start.frame)
 
-  _findEndKeyframe: (keyframes) ->
-    _.find keyframes, (k) =>
+  findEndKeyframe = (keyframes) ->
+    _(keyframes).find (k) =>
       k.frame >= (@frame || 1)
 
-  _findStartKeyframe: (keyframes) ->
+  findStartKeyframe = (keyframes) ->
     index = undefined
 
     keyframes.some (k, i) =>
@@ -80,7 +80,7 @@ class Engine.Animations.Keyframe
 
     keyframes[index - 1]
 
-  _calcRelativeVal: (motion, k) ->
+  calcRelativeVal = (motion, k) ->
     a = motion.start[k]
     b = motion.end[k]
     r = motion.ratio
