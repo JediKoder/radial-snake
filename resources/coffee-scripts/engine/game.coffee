@@ -89,13 +89,13 @@ class Engine.Game
     @screen.loading = yes
     loadsize = 0
 
-    assetsManager = new Engine.AssetsManager
+    assetsLoader = new Engine.AssetsLoader
 
-    assetsManager.__defineGetter__ "onload", =>
+    assetsLoader.__defineGetter__ "onload", =>
       loadsize++
       => onload()
 
-    _(@screen.assets).extend @screen.load(assetsManager)
+    _(@screen.assets).extend @screen.load(assetsLoader)
 
     onload = _.after loadsize, =>
       delete @screen.loading
