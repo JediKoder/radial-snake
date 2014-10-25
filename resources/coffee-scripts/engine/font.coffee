@@ -69,16 +69,13 @@ class Engine.Font extends Restoreable
 
     @charSpritesMap[char] = new Engine.Sprite canvas
 
-  Object.defineProperties @proto,
-    "src":
-      set: (src) ->
-        @__defineGetter__ "src", -> src
-        done = _.after 2, @onload if @onload?
+  @::__defineSetter__ "src", (src) ->
+    @__defineGetter__ "src", -> src
+    done = _.after 2, @onload if @onload?
 
-        @atlas = new Image
-        @atlas.onload = done
-        @atlas.src = "#{src}.png"
+    @atlas = new Image
+    @atlas.onload = done
+    @atlas.src = "#{src}.png"
 
-        $.getJSON "#{src}.json", (@data) =>
-          done?()
-    
+    $.getJSON "#{src}.json", (@data) =>
+      done?()

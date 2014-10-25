@@ -1,12 +1,11 @@
-class SnakeOnline.Screens.Ready extends Engine.Screen
+class SnakeOnline.Screens.Play.Layers.Ready extends Engine.Layer
   events:
     "keydown": "onKeyDown"
 
-  constructor: (game, assets) ->
-    super game, assets
-    @loadedAssets = assets
+  constructor: (screen) ->
+    super screen
 
-    readySprite = new Engine.Sprite assets.minecraftiaFont.createTexture "Ready"
+    readySprite = new Engine.Sprite @assets.minecraftiaFont.createTexture "Ready"
     readySprite.align = "center"
     readySprite.setPercentage "width", @width, 15, "height"
 
@@ -24,16 +23,16 @@ class SnakeOnline.Screens.Ready extends Engine.Screen
   draw: (context) ->
     @readyAnim.draw context
 
-  update: (span) ->
+  update: (span, layerManager) ->
     return unless @ready
 
-    if @game.screens.length is 1
+    if @screen.layers.length is 1
       @readyAnim.playing = yes
-      @prependScreen SnakeOnline.Screens.Play
+      layerManager.prepend new SnakeOnline.Screens.Play.Layers.Snake @screen
     else if @readyAnim.playing
       @readyAnim.update span
     else
-      @remove()
+      layerManager.remove this
 
   onKeyDown: ->
     @ready = yes

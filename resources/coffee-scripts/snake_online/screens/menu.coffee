@@ -2,14 +2,11 @@ class SnakeOnline.Screens.Menu extends Engine.Screen
   events:
     "keydown": "onKeyDown"
 
-  constructor: (game, assets) ->
-    super game, assets
-    @loadedAssets = assets
-
-    @logoSprite = new Engine.Sprite assets.logoTexture
+  initialize: ->
+    @logoSprite = new Engine.Sprite @assets.logoTexture
     @logoSprite.setPercentage "width", @width, 30, "height"
 
-    instructionsSprite = new Engine.Sprite assets.minecraftiaFont.createTexture "Press a key to start"
+    instructionsSprite = new Engine.Sprite @assets.minecraftiaFont.createTexture "Press a key to start"
     instructionsSprite.align = "center"
     instructionsSprite.setPercentage "width", @width, 35, "height"
     instructionsSprite.x = @width / 2
@@ -26,14 +23,16 @@ class SnakeOnline.Screens.Menu extends Engine.Screen
     @instructionsAnim.repMode = "full"
     @instructionsAnim.playing = yes
 
+  unload: ->
+    "logoTexture"
+
   draw: (context) ->
     @logoSprite.draw context
     @instructionsAnim.draw context
 
-  update: (span) ->
+  update: (span, screenManager) ->
     if @keyPressed
-      @appendScreen SnakeOnline.Screens.Ready
-      @remove()
+      screenManager.change new SnakeOnline.Screens.Play @game
     else
       @instructionsAnim.update span
 

@@ -1,2 +1,4 @@
 $(doc).ready ->
-  new SnakeOnline.Game($("#gameCanvas")[0], SnakeOnline.Screens.Init, no).play()
+  game = new SnakeOnline.Game $("#gameCanvas")[0], no
+  game.changeScreen new SnakeOnline.Screens.Splash game
+  game.play()

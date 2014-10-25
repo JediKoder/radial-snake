@@ -2,7 +2,9 @@ class Engine.Game
   fps: 60
   speed: 1
 
-  constructor: (@canvas, Screen, @debugging) ->
+  constructor: (@canvas, @debugging) ->
+    @lastUpdate = @creation = new Date().getTime()
+
     canvas.width = 1280
     canvas.height = 720
     canvas.focus()
@@ -11,55 +13,51 @@ class Engine.Game
     canvas.addEventListener "keydown", onKeyDown.bind(this), no
     canvas.addEventListener "keyup", onKeyUp.bind(this), no
 
-    @events = []
-    @screens = []
+    @assets = {}
+    @events = new Map
     @context = canvas.getContext "2d"
     @bufferedCanvas = doc.createElement "canvas"
     @bufferedContext = @bufferedCanvas.getContext "2d"
     @bufferedCanvas.width = canvas.width
     @bufferedCanvas.height = canvas.height
     @keyStates = new Engine.KeyStates
-    @appendScreen new Screen this
-    @lastUpdate = new Date().getTime()
 
   draw: ->
     if @debugging
       @context.restore()
-      @context.fillStyle = "white"
+      @context.fillStyle = "black"
       @context.save()
       @context.beginPath()
       @context.rect 0, 0, @canvas.width, @canvas.height
       @context.fill()
-      @drawScreens @context
+      @drawScreen @context
     else
       @bufferedContext.restore()
-      @bufferedContext.fillStyle = "white"
+      @bufferedContext.fillStyle = "black"
       @bufferedContext.save()
       @bufferedContext.beginPath()
       @bufferedContext.rect 0, 0, @canvas.width, @canvas.height
       @bufferedContext.fill()
-      @drawScreens @bufferedContext
+      @drawScreen @bufferedContext
       @context.drawImage @bufferedCanvas, 0, 0
 
-  drawScreens: (context) ->
-    context.fillStyle = "black"
-    context.beginPath()
-    context.rect 0, 0, @canvas.width, @canvas.height
-    context.fill()
-
-    @screens.forEach (screen) ->
-      screen.draw? context
+  drawScreen: (context) ->
+    return if @screen.loading
+    @screen.draw? context
 
   update: ->
     lastUpdate = @lastUpdate
     currUpdate = @lastUpdate = new Date().getTime()
     span = currUpdate - lastUpdate
-    @updateScreens span / @speed
+    @updateScreen span / @speed
 
-  updateScreens: (span) ->
-    @screens.forEach (screen) ->
-      screen.age = @lastUpdate - screen.creation
-      screen.update? span
+  updateScreen: (span) ->
+    @screen.age += span
+    return if @screen.loading
+
+    @screen.update? span,
+      # Screen Manager
+      change: @changeScreen.bind this
 
   loop: ->
     return unless @playing
@@ -77,33 +75,55 @@ class Engine.Game
   pause: ->
     @playing = no
 
-  appendScreen: (screen) ->
-    @screens.push screen
-    screen.addEventListeners()
+  changeScreen: (screen) ->
+    if @screen
+      @unloadScreen()
+      @screen.disposeEventListeners()
 
-  prependScreen: (screen) ->
-    @screens.unshift screen
-    screen.addEventListeners()
+    @screen = screen
 
-  removeScreen: (screen) ->
-    @screens = _(@screens).without screen
-    screen.removeEventListeners()
+    @loadScreen =>
+      screen.initEventListeners()
+      screen.initialize()
+
+  loadScreen: (callback) ->
+    return callback?() unless @screen.load?
+
+    @screen.loading = yes
+    loadsize = 0
+
+    _(@screen.assets).extend @screen.load =>
+      loadsize++
+      => onload()
+    , 
+      # Assets Manager
+      remember: @extendAssets.bind this
+
+    onload = _.after loadsize, =>
+      delete @screen.loading
+      callback?()
+
+  unloadScreen: ->
+    _(@assets).omit @screen.unload? {
+      # Assets Manager
+      forget: @clearAssets.bind this
+    }
+
+  extendAssets: (assets) ->
+    _(@assets).extend assets
+
+  clearAssets: ->
+    @assets = {}
 
   addEventListener: (type, listener, target) ->
-    bindedListener = listener.bind target
-
-    @events.push
-      listener: listener
-      bindedListener: bindedListener
-
-    @canvas.addEventListener type, bindedListener, no
+    boundListener = listener.bind target
+    @events.set listener, boundListener
+    @canvas.addEventListener type, boundListener, no
 
   removeEventListener: (type, listener) ->
-    event = _(@events).find (e) ->
-      e.listener is listener
-
-    @events = _(@events).without event
-    @canvas.removeEventListener type, event.bindedListener, no
+    boundListener = @events.get listener
+    @events.delete listener
+    @canvas.removeEventListener type, boundListener, no
 
   onKeyDown = (e) ->
     e.preventDefault()

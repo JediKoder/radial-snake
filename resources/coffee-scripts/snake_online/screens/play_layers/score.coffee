@@ -1,6 +1,6 @@
-class SnakeOnline.Screens.Score extends Engine.Screen
-  constructor: (game, assets, @snakes) ->
-    super game, assets
+class SnakeOnline.Screens.Play.Layers.Score extends Engine.Layer
+  constructor: (game, @snakes) ->
+    super game
     @scoreSprites = []
     @scores = []
 

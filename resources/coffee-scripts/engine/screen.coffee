@@ -1,55 +1,57 @@
 class Engine.Screen
-  constructor: (@game, @assets) ->
+  constructor: (@game) ->
+    @age = 0
     @creation = new Date().getTime()
-    @loadsize = 0
+    @assets = _(game.assets).clone()
+    @keyStates = game.keyStates
+    @layers = []
 
-    {@keyStates} = game
+  update: (span, screenManager) ->
+    @layers.forEach (layer) => 
+      layer.age += span
 
-    {@width
-     @height} = game.canvas
+      layer.update? span,
+        # Layer Manager
+        apppend: @appendLayer.bind this
+        prepend: @prependLayer.bind this
+        remove: @removeLayer.bind this
+      ,
+        screenManager
 
-    @loadedAssets = @load?()
+  draw: (context) ->
+    @layers.forEach (layer) -> layer.draw? context
 
-    if @loadsize
-      @onload = _.after @loadsize, -> @loaded = yes
-    else
-      @loaded = yes
+  appendLayer: (layer) ->
+    @layers.push layer
+    layer.initEventListeners()
 
-  appendScreen: (Screen, screenArgs...) ->
-    screen = new Screen @game, @loadedAssets, screenArgs...
-    @game.appendScreen screen
+  prependLayer: (layer) ->
+    @layers.unshift layer
+    layer.initEventListeners()
 
-  prependScreen: (Screen, screenArgs...) ->
-    screen = new Screen @game, @loadedAssets, screenArgs...
-    @game.prependScreen screen
+  removeLayer: (layer) ->
+    @layers = _(@layers).without layer
+    layer.disposeEventListeners()
 
-  remove: ->
-    @game.removeScreen this
+  addEventListener: (event, listener, target = this) ->
+    @game.addEventListener event, listener, target
 
-  addEventListeners: ->
-    @events?.forEach (event) =>
-      @game.addEventListener event, @getEventListener(event), this
+  removeEventListener: (event, listener) ->
+    @game.removeEventListener event, listener
 
-  removeEventListeners: ->
-    @events?.forEach (event) =>
-      @game.removeEventListener event, @getEventListener(event)
+  initEventListeners: ->
+    @events?.forEach (event, listener) =>
+      @addEventListener event, @[listener]
 
-  getEventListener: (event) ->
-    listener = @events[event]
+  disposeEventListeners: ->
+    @events?.forEach (event, listener) =>
+      @removeEventListener event, @[listener]
 
-    if typeof listener is "function"
-      listener
-    else
-      @[listener]
+    @layers.forEach (layer) ->
+      layer.disposeEventListeners()
 
-  createScreen: (Screen) ->
-    new Screen @game, @loadedAssets
+  @::__defineGetter__ "width", ->
+    @game.canvas.width
 
-  Object.defineProperties @proto,
-    "onload":
-      get: ->
-        @loadsize++
-        => @onload()
-
-      set: (onload) ->
-        @__defineGetter__ "onload", -> onload
+  @::__defineGetter__ "height", ->
+    @game.canvas.height
