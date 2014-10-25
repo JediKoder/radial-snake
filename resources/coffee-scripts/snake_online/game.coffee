@@ -1,1 +1,0 @@
-class SnakeOnline.Game extends Engine.Game

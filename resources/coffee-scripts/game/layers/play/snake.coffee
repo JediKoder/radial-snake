@@ -1,9 +1,9 @@
-class SnakeOnline.Screens.Play.Layers.Snake extends Engine.Layer
+class Game.Layers.Play.Snake extends Engine.Layer
   constructor: (screen) ->
     super screen
 
     @snakes = [
-      new SnakeOnline.Entities.Snake(
+      new Game.Entities.Snake(
         @width / 4
         @height / 4
         50
@@ -16,7 +16,7 @@ class SnakeOnline.Screens.Play.Layers.Snake extends Engine.Layer
           right: 39 # right
       )
 
-      new SnakeOnline.Entities.Snake(
+      new Game.Entities.Snake(
         @width / 4 * 3
         @height / 4 * 3
         50
@@ -30,7 +30,7 @@ class SnakeOnline.Screens.Play.Layers.Snake extends Engine.Layer
       )
     ]
 
-    screen.appendLayer SnakeOnline.Screens.Play.Layers.Score, @snakes
+    screen.appendLayer Game.Layers.Play.Score, @snakes
 
   draw: (context) ->
     @snakes.forEach (snake) ->

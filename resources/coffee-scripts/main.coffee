@@ -1,4 +1,4 @@
 $(doc).ready ->
-  game = new SnakeOnline.Game $("#gameCanvas")[0], no
-  game.changeScreen SnakeOnline.Screens.Splash
+  game = new Engine.Game $("#gameCanvas")[0], no
+  game.changeScreen Game.Screens.Splash
   game.play()

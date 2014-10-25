@@ -1,4 +1,4 @@
-class SnakeOnline.Entities.Snake
+class Game.Entities.Snake
   constructor: (@x, @y, @r, @rad, @v, @color, @keyStates, options) ->
     @shapes = []
     @currShape = new Engine.Geometry.Line x, y, x, y

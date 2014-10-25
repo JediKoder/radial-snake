@@ -1,4 +1,4 @@
-class SnakeOnline.Screens.Splash extends Engine.Screen
+class Game.Screens.Splash extends Engine.Screen
   initialize: ->
     splashSprite = new Engine.Sprite @assets.splashTexture
     splashSprite.align = "center"
@@ -50,4 +50,4 @@ class SnakeOnline.Screens.Splash extends Engine.Screen
     if @splashAnim.playing
       @splashAnim.update span
     else
-      @game.changeScreen SnakeOnline.Screens.Menu
+      @game.changeScreen Game.Screens.Menu

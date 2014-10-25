@@ -1,4 +1,4 @@
-class SnakeOnline.Screens.Menu extends Engine.Screen
+class Game.Screens.Menu extends Engine.Screen
   events:
     "keydown": "onKeyDown"
 
@@ -32,7 +32,7 @@ class SnakeOnline.Screens.Menu extends Engine.Screen
 
   update: (span) ->
     if @keyPressed
-      @game.changeScreen SnakeOnline.Screens.Play
+      @game.changeScreen Game.Screens.Play
     else
       @instructionsAnim.update span
 

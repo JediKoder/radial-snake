@@ -1,4 +1,4 @@
-class SnakeOnline.Screens.Play.Layers.Ready extends Engine.Layer
+class Game.Layers.Play.Ready extends Engine.Layer
   events:
     "keydown": "onKeyDown"
 
@@ -34,4 +34,4 @@ class SnakeOnline.Screens.Play.Layers.Ready extends Engine.Layer
   onKeyDown: ->
     @ready = yes
     @readyAnim.playing = yes
-    @screen.prependLayer SnakeOnline.Screens.Play.Layers.Snake
+    @screen.prependLayer Game.Layers.Play.Snake
