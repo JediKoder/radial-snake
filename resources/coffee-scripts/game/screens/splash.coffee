@@ -23,18 +23,10 @@ class Game.Screens.Splash extends Engine.Screen
 
     @splashAnim.playing = yes
 
-  load: (next) ->
-    splashTexture = new Image
-    splashTexture.onload = next()
-    splashTexture.src = "/textures/splash.png"
-
-    minecraftiaFont = new Engine.Font
-    minecraftiaFont.onload = next()
-    minecraftiaFont.src = "/fonts/minecraftia"
-
-    logoTexture = new Image
-    logoTexture.onload = next()
-    logoTexture.src = "/textures/logo.png"
+  load: (assetsManager) ->
+    minecraftiaFont = assetsManager.loadFont "/fonts/minecraftia"
+    splashTexture = assetsManager.loadTexture "/textures/splash"
+    logoTexture = assetsManager.loadTexture "/textures/logo"
 
     @game.extendAssets {
       minecraftiaFont
