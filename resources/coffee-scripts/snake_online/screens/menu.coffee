@@ -30,9 +30,9 @@ class SnakeOnline.Screens.Menu extends Engine.Screen
     @logoSprite.draw context
     @instructionsAnim.draw context
 
-  update: (span, screenManager) ->
+  update: (span) ->
     if @keyPressed
-      screenManager.change new SnakeOnline.Screens.Play @game
+      @game.changeScreen SnakeOnline.Screens.Play
     else
       @instructionsAnim.update span
 

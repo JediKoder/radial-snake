@@ -54,10 +54,7 @@ class Engine.Game
   updateScreen: (span) ->
     @screen.age += span
     return if @screen.loading
-
-    @screen.update? span,
-      # Screen Manager
-      change: @changeScreen.bind this
+    @screen.update? span
 
   loop: ->
     return unless @playing
@@ -75,16 +72,16 @@ class Engine.Game
   pause: ->
     @playing = no
 
-  changeScreen: (screen) ->
+  changeScreen: (Screen, screenArgs...) ->
     if @screen
       @unloadScreen()
       @screen.disposeEventListeners()
 
-    @screen = screen
+    @screen = new Screen this, screenArgs...
 
     @loadScreen =>
-      screen.initEventListeners()
-      screen.initialize()
+      @screen.initEventListeners()
+      @screen.initialize()
 
   loadScreen: (callback) ->
     return callback?() unless @screen.load?
@@ -95,19 +92,13 @@ class Engine.Game
     _(@screen.assets).extend @screen.load =>
       loadsize++
       => onload()
-    , 
-      # Assets Manager
-      remember: @extendAssets.bind this
 
     onload = _.after loadsize, =>
       delete @screen.loading
       callback?()
 
   unloadScreen: ->
-    _(@assets).omit @screen.unload? {
-      # Assets Manager
-      forget: @clearAssets.bind this
-    }
+    _(@assets).omit @screen.unload?()
 
   extendAssets: (assets) ->
     _(@assets).extend assets

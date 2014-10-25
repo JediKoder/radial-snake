@@ -6,26 +6,21 @@ class Engine.Screen
     @keyStates = game.keyStates
     @layers = []
 
-  update: (span, screenManager) ->
+  update: (span) ->
     @layers.forEach (layer) => 
       layer.age += span
-
-      layer.update? span,
-        # Layer Manager
-        apppend: @appendLayer.bind this
-        prepend: @prependLayer.bind this
-        remove: @removeLayer.bind this
-      ,
-        screenManager
+      layer.update? span
 
   draw: (context) ->
     @layers.forEach (layer) -> layer.draw? context
 
-  appendLayer: (layer) ->
+  appendLayer: (Layer, layerArgs...) ->
+    layer = new Layer this, layerArgs...
     @layers.push layer
     layer.initEventListeners()
 
-  prependLayer: (layer) ->
+  prependLayer: (Layer, layerArgs...) ->
+    layer = new Layer this, layerArgs...
     @layers.unshift layer
     layer.initEventListeners()
 

@@ -1,7 +1,5 @@
 class SnakeOnline.Screens.Splash extends Engine.Screen
   initialize: ->
-    @menuScreen = new SnakeOnline.Screens.Menu @game
-
     splashSprite = new Engine.Sprite @assets.splashTexture
     splashSprite.align = "center"
     splashSprite.x = @width / 2
@@ -25,7 +23,7 @@ class SnakeOnline.Screens.Splash extends Engine.Screen
 
     @splashAnim.playing = yes
 
-  load: (next, assetsManager) ->
+  load: (next) ->
     splashTexture = new Image
     splashTexture.onload = next()
     splashTexture.src = "/textures/splash.png"
@@ -38,7 +36,7 @@ class SnakeOnline.Screens.Splash extends Engine.Screen
     logoTexture.onload = next()
     logoTexture.src = "/textures/logo.png"
 
-    assetsManager.remember {
+    @game.extendAssets {
       minecraftiaFont
       logoTexture
     }
@@ -48,8 +46,8 @@ class SnakeOnline.Screens.Splash extends Engine.Screen
   draw: (context) ->
     @splashAnim.draw context
 
-  update: (span, screenManager) ->
+  update: (span) ->
     if @splashAnim.playing
       @splashAnim.update span
     else
-      screenManager.change @menuScreen
+      @game.changeScreen SnakeOnline.Screens.Menu

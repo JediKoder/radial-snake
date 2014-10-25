@@ -30,7 +30,7 @@ class SnakeOnline.Screens.Play.Layers.Snake extends Engine.Layer
       )
     ]
 
-    screen.appendLayer new SnakeOnline.Screens.Play.Layers.Score screen, @snakes
+    screen.appendLayer SnakeOnline.Screens.Play.Layers.Score, @snakes
 
   draw: (context) ->
     @snakes.forEach (snake) ->

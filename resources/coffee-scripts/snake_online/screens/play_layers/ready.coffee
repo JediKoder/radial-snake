@@ -23,16 +23,15 @@ class SnakeOnline.Screens.Play.Layers.Ready extends Engine.Layer
   draw: (context) ->
     @readyAnim.draw context
 
-  update: (span, layerManager) ->
+  update: (span) ->
     return unless @ready
 
-    if @screen.layers.length is 1
-      @readyAnim.playing = yes
-      layerManager.prepend new SnakeOnline.Screens.Play.Layers.Snake @screen
-    else if @readyAnim.playing
+    if @readyAnim.playing
       @readyAnim.update span
     else
-      layerManager.remove this
+      @screen.removeLayer this
 
   onKeyDown: ->
     @ready = yes
+    @readyAnim.playing = yes
+    @screen.prependLayer SnakeOnline.Screens.Play.Layers.Snake
