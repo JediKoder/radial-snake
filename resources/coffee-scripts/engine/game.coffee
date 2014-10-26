@@ -87,13 +87,15 @@ class Engine.Game
     return callback?() unless @screen.load?
 
     @screen.loading = yes
+    assetsLoader = {}
     loadsize = 0
 
-    assetsLoader = new Engine.AssetsLoader
+    assetsLoader.__defineSetter__ "onload", (next) ->
+      @__defineGetter__ "onload", next
 
-    assetsLoader.__defineGetter__ "onload", =>
+    Object.renew assetsLoader, Engine.AssetsLoader, ->
       loadsize++
-      => onload()
+      -> onload()
 
     _(@screen.assets).extend @screen.load(assetsLoader)
 

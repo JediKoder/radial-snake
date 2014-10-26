@@ -1,5 +1,10 @@
 HTMLDocument::newEl = HTMLDocument::createElement
 
+Object.renew = (obj, constructor, args...) ->
+  constructor.call obj, args...
+  obj.constructor = constructor
+  obj.__proto__ = constructor.prototype
+
 Object.defineProperties self,
   "callee":
     get: ->
