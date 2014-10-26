@@ -33,5 +33,5 @@ class Game.Layers.Play.Ready extends Engine.Layer
 
   onKeyDown: ->
     @ready = yes
-    @readyAnim.playing = yes
+    @readyAnim.play()
     @screen.prependLayer Game.Layers.Play.Snake

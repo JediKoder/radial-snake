@@ -1,14 +1,14 @@
 class Engine.AssetsLoader
-  constructor: (@onload) ->
+  constructor: (@next) ->
 
   texture: (path) ->
     image = new Image
-    image.onload = @onload
+    image.onload = @next()
     image.src = "#{path}.png"
     image
 
   font: (path) ->
     font = new Engine.Font
-    font.onload = @onload
+    font.onload = @next()
     font.src = path
     font

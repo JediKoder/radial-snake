@@ -14,9 +14,9 @@ class Engine.Animations.Keyframe
       "opacity"
     ]
 
-    @trimmedKeyframesMap = @animables.reduce (trimmedKeyframesMap, k) ->
-      trimmedKeyframesMap[k] = keyframes.filter (keyframe) -> keyframe[k]?
-      trimmedKeyframesMap
+    @trimmedKeyframes = @animables.reduce (trimmedKeyframes, k) ->
+      trimmedKeyframes[k] = keyframes.filter (keyframe) -> keyframe[k]?
+      trimmedKeyframes
     , {}
 
     keyframes[0].forEach (k, v) =>
@@ -43,34 +43,40 @@ class Engine.Animations.Keyframe
         @frame = @lastFrame - @frame if @age / @lastFrame % 2 >= 1
 
     @animables.forEach (k) =>
-      motion = getKeyframesMo.call this, k
+      motion = @_getKeyframesMo k
       return unless motion?
-      @sprite[k] = calcRelativeVal.call this, motion, k
+      @sprite[k] = @_calcRelativeVal motion, k
 
-  getKeyframesMo = (k) ->
-    keyframes = @trimmedKeyframesMap[k]
+  play: ->
+    @playing = yes
+
+  pause: ->
+    @playing = no
+
+  _getKeyframesMo: (k) ->
+    keyframes = @trimmedKeyframes[k]
 
     if not keyframes? or
        keyframes.length < 2 or
        @frame > _(keyframes).last().frame
       return
 
-    start = findStartKeyframe.call this, keyframes
-    end = findEndKeyframe.call this, keyframes
-    ratio = getKeyframesRatio.call this, start, end
+    start = @_findStartKeyframe keyframes
+    end = @_findEndKeyframe keyframes
+    ratio = @_getKeyframesRatio start, end
 
     start: start
     end: end
     ratio: ratio
 
-  getKeyframesRatio = (start, end) ->
+  _getKeyframesRatio: (start, end) ->
     (@frame - start.frame) / (end.frame - start.frame)
 
-  findEndKeyframe = (keyframes) ->
+  _findEndKeyframe: (keyframes) ->
     _(keyframes).find (k) =>
       k.frame >= (@frame || 1)
 
-  findStartKeyframe = (keyframes) ->
+  _findStartKeyframe: (keyframes) ->
     index = undefined
 
     keyframes.some (k, i) =>
@@ -80,7 +86,7 @@ class Engine.Animations.Keyframe
 
     keyframes[index - 1]
 
-  calcRelativeVal = (motion, k) ->
+  _calcRelativeVal: (motion, k) ->
     a = motion.start[k]
     b = motion.end[k]
     r = motion.ratio

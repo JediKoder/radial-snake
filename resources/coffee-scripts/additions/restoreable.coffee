@@ -1,12 +1,12 @@
 class @Restoreable
-  constructor: (@restoreableProps...) ->
-    @restoreableStates = []
+  constructor: (@_restoreableProps...) ->
+    @_restoreableStates = []
 
   save: ->
-    @restoreableStates.push @restoreableProps.reduce (state, prop) =>
+    @_restoreableStates.push @_restoreableProps.reduce (state, prop) =>
       state[prop] = @[prop]
       state
     , {}
 
   restore: ->
-    _(this).extend @restoreableStates.pop()
+    _(this).extend @_restoreableStates.pop()

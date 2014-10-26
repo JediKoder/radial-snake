@@ -21,7 +21,7 @@ class Game.Screens.Splash extends Engine.Screen
       frame: 3500
     ]
 
-    @splashAnim.playing = yes
+    @splashAnim.play()
 
   load: (assetsLoader) ->
     minecraftiaFont = assetsLoader.font "/fonts/minecraftia"

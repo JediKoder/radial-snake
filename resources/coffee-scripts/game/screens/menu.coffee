@@ -21,7 +21,7 @@ class Game.Screens.Menu extends Engine.Screen
     ]
 
     @instructionsAnim.repMode = "full"
-    @instructionsAnim.playing = yes
+    @instructionsAnim.play()
 
   unload: ->
     "logoTexture"
