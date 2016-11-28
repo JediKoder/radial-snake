@@ -7,7 +7,7 @@ class Engine.Screen
     @layers = []
 
   update: (span) ->
-    @layers.forEach (layer) => 
+    @layers.forEach (layer) =>
       layer.age += span
       layer.update? span
 

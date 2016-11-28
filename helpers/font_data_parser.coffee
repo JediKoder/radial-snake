@@ -11,9 +11,9 @@ exports.xmlsToJsons = (path, callback) ->
       file.split(".")[0]
 
     Async.each fileNames
-    , (fileName, callback) -> 
+    , (fileName, callback) ->
       exports.xmlToJson "#{path}/#{fileName}", callback
-    , (err) -> 
+    , (err) ->
       callback? err
 
 exports.xmlToJson = (path, callback) ->
@@ -21,7 +21,7 @@ exports.xmlToJson = (path, callback) ->
     (next) -> Fs.readFile "#{path}.xml", (err, xmlBuf) ->
       return next err if err
 
-      jsonObj = 
+      jsonObj =
         chars: {}
 
       xml = xmlBuf.toString()

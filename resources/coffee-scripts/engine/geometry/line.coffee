@@ -25,7 +25,7 @@ class Engine.Geometry.Line
   getLineIntersection: (l) ->
     return unless (@x1 - @x2) * (l.y1 - l.y2) - (@y1 - @y2) * (l.x1 - l.x2)
 
-    x = (((@x1 * @y2 - @y1 * @x2) * (l.x1 - l.x2) - (@x1 - @x2) * (l.x1 * l.y2 - l.y1 * l.x2)) / 
+    x = (((@x1 * @y2 - @y1 * @x2) * (l.x1 - l.x2) - (@x1 - @x2) * (l.x1 * l.y2 - l.y1 * l.x2)) /
         ((@x1 - @x2) * (l.y1 - l.y2) - (@y1 - @y2) * (l.x1 - l.x2))).trim 9
     y = (((@x1 * @y2 - @y1 * @x2) * (l.y1 - l.y2) - (@y1 - @y2) * (l.x1 * l.y2 - l.y1 * l.x2)) /
         ((@x1 - @x2) * (l.y1 - l.y2) - (@y1 - @y2) * (l.x1 - l.x2))).trim 9

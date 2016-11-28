@@ -2,9 +2,8 @@ class Engine.Layer
   constructor: (@screen) ->
     @age = 0
     @creation = new Date().getTime()
-    
-    {@assets
-     @keyStates} = screen
+
+    {@assets, @keyStates} = screen
 
   initEventListeners: ->
     @events?.forEach (event, listener) =>

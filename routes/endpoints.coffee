@@ -1,42 +1,50 @@
-exports.route = (route) ->
-  route
+Pack = require "../package.json"
+
+exports.register = (server, options, next) ->
+  server.route
     method: "GET"
     path: "/scripts/{path*}"
-    handler: 
-      directory: 
+    handler:
+      directory:
         path: "./resources/scripts/"
 
-  route
+  server.route
     method: "GET"
     path: "/styles/{path*}"
-    handler: 
-      directory: 
+    handler:
+      directory:
         path: "./resources/styles/"
-        
-  route  
+
+  server.route
     method: "GET"
     path: "/libs/{path*}"
-    handler: 
-      directory: 
+    handler:
+      directory:
         path: "./resources/libs/"
-        
-  route
+
+  server.route
     method: "GET"
     path: "/images/{path*}"
     handler:
       directory:
         path: "./resources/images/"
-        
-  route
+
+  server.route
     method: "GET"
     path: "/textures/{path*}"
-    handler: 
-      directory: 
+    handler:
+      directory:
         path: "./resources/assets/textures/"
-        
-  route
+
+  server.route
     method: "GET"
     path: "/fonts/{path*}"
-    handler: 
-      directory: 
+    handler:
+      directory:
         path: "./resources/assets/fonts/"
+
+  next()
+
+exports.register.attributes =
+  name: "endpoints"
+  version: Pack.version

@@ -1,15 +1,20 @@
+Async = require "async"
 Hapi = require "hapi"
-Router = require "./helpers/router"
+Inert = require "inert"
+Endpoints = require "./routes/endpoints"
 IpGrabber = require "./helpers/ip_grabber"
+Pages = require "./routes/pages"
 
 localIp = IpGrabber.local()
 port = 8000
 
-server = new Hapi.Server port,
-  files:
-    relativeTo: __dirname
+server = new Hapi.Server
+  connections:
+    routes:
+      files:
+        relativeTo: __dirname
 
-Router.implement server
+server.connection { port: process.env.PORT || port }
 
 server.ext "onPreResponse", (req, next) ->
   res = req.response
@@ -22,11 +27,18 @@ server.ext "onPreResponse", (req, next) ->
   console.log()
   next()
 
-server.start ->
+Async.series [
+  (next) -> server.register Inert, next
+  (next) -> server.register Endpoints, next
+  (next) -> server.register Pages, next
+  (next) -> server.start next
+], (err) ->
+  throw err if err
+
   console.log()
   console.log "---------- -------- ------ ---- --"
   console.log "----- ---- --- -- -"
-  console.log "Starting server at #{localIp}:#{port}"
+  console.log "Server running at #{localIp}:#{port}"
   console.log "----- ---- --- -- -"
   console.log "---------- -------- ------ ---- --"
   console.log()

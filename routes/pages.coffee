@@ -1,9 +1,16 @@
 Hapi = require "hapi"
-Permitter = require "./../helpers/permitter"
+Pack = require "../package.json"
+Permitter = require "../helpers/permitter"
 
-exports.route = (route) ->
-  route method: "GET", path: "/",     handler: getGame
-  route method: "GET", path: "/test", handler: getSpecRunner
+exports.register = (server, options, next) ->
+  server.route method: "GET", path: "/",     handler: getGame
+  server.route method: "GET", path: "/test", handler: getSpecRunner
+
+  next()
+
+exports.register.attributes =
+  name: "pages"
+  version: Pack.version
 
 getGame = (req, rep) ->
   path = "./views/game.html"

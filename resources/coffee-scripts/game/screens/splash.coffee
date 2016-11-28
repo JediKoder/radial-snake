@@ -32,8 +32,8 @@ class Game.Screens.Splash extends Engine.Screen
       minecraftiaFont
       logoTexture
     }
-    
-    {splashTexture}
+
+    { splashTexture }
 
   draw: (context) ->
     @splashAnim.draw context
