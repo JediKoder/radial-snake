@@ -108,7 +108,7 @@ Engine.Game = class Game {
     this.screen.loading = true;
     let loadsize = 0;
 
-    _.extend(this.screen.assets, this.screen.load(new Engine.AssetsLoader(function() {
+    _.extend(this.screen.assets, this.screen.load(new Engine.AssetsLoader(() => {
       loadsize++;
       return () => onload();
     })));

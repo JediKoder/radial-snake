@@ -42,7 +42,8 @@ Game.Screens.Menu = class Menu extends Engine.Screen {
   update(span) {
     if (this.keyPressed) {
       this.game.changeScreen(Game.Screens.Play);
-    } else {
+    }
+    else {
       this.instructionsAnim.update(span);
     }
   }

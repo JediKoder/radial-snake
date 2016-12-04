@@ -1,6 +1,6 @@
 Restoreable = class Restoreable {
   constructor(...restoreableProps) {
-    this._restoreableProps = [];
+    this._restoreableProps = restoreableProps;
     this._restoreableStates = [];
   }
 

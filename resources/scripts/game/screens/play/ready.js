@@ -5,8 +5,9 @@ Game.Screens.Play.Ready = class Ready extends Engine.Layer {
     };
   }
 
-  constructor(screen) {
+  constructor(screen, snakes) {
     super(screen);
+    this.snakes = snakes;
 
     let readySprite = new Engine.Sprite(this.assets.minecraftiaFont.createTexture("Ready"));
     readySprite.align = "center";
@@ -47,6 +48,6 @@ Game.Screens.Play.Ready = class Ready extends Engine.Layer {
 
     this.ready = true;
     this.readyAnim.play();
-    this.screen.prependLayer(Game.Screens.Play.Snake);
+    this.screen.prependLayer(Game.Screens.Play.Snake, this.snakes);
   }
 };

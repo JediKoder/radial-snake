@@ -1,5 +1,5 @@
 Game.Screens.Play.Snake = class Snake extends Engine.Layer {
-  constructor(screen) {
+  constructor(screen, snakes = []) {
     super(screen);
 
     this.snakes = [
@@ -12,6 +12,7 @@ Game.Screens.Play.Snake = class Snake extends Engine.Layer {
         "FireBrick",
         this.keyStates,
         {
+          score: snakes[0] && snakes[0].score,
           keys: {
             left: 37, // left
             right: 39 // right
@@ -27,6 +28,7 @@ Game.Screens.Play.Snake = class Snake extends Engine.Layer {
         "DodgerBlue",
         this.keyStates,
         {
+          score: snakes[1] && snakes[1].score,
           keys: {
             left: 65, // a
             right: 68 // d
@@ -43,6 +45,7 @@ Game.Screens.Play.Snake = class Snake extends Engine.Layer {
 
   update(span) {
     let disqualifiedIndexes = [];
+    let allSnakes = this.snakes.slice();
 
     this.snakes.forEach((snake, i) => {
       snake.update(span);
@@ -62,5 +65,9 @@ Game.Screens.Play.Snake = class Snake extends Engine.Layer {
         this.snakes[0].score++;
       }
     });
+
+    if (this.snakes.length <= 1) {
+      this.screen.appendLayer(Game.Screens.Play.Win, allSnakes, this.snakes[0]);
+    }
   }
 };

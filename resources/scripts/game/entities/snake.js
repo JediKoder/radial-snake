@@ -10,7 +10,7 @@ Game.Entities.Snake = class Snake {
     this.shapes = [];
     this.currShape = new Engine.Geometry.Line(x, y, x, y);
     this.shapes.push(this.currShape);
-    this.score = 0;
+    this.score = options.score || 0;
 
     if (options.keys && options.keys) {
       this.leftKey = options.keys.left;

@@ -40,7 +40,7 @@ Engine.Screen = class Screen {
   }
 
   removeLayer(layer) {
-    this.layers = _(this.layers).without(layer);
+    this.layers = _.without(this.layers, layer);
     layer.disposeEventListeners();
   }
 

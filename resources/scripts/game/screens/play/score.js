@@ -1,6 +1,6 @@
 Game.Screens.Play.Score = class Score extends Engine.Layer {
-  constructor(game, snakes) {
-    super(game);
+  constructor(screen, snakes) {
+    super(screen);
     this.snakes = snakes;
     this.scoreSprites = [];
     this.scores = [];
@@ -20,12 +20,12 @@ Game.Screens.Play.Score = class Score extends Engine.Layer {
     this.snakes.forEach(snake => {
       let i = snake.index;
       if (this.scores[i] == snake.score) return;
-      this.scoreSprites[i] = this.createScoreSprite(snake, i);
+      this.scoreSprites[i] = this.createScoreSprite(snake);
       this.scores[i] = snake.score;
     });
   }
 
-  createScoreSprite(snake, i) {
+  createScoreSprite(snake) {
     let { minecraftiaFont } = this.assets;
     minecraftiaFont.save();
     minecraftiaFont.color = snake.color;
