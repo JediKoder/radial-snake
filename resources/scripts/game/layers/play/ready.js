@@ -12,7 +12,8 @@ Game.Layers.Play.Ready = class Ready extends Engine.Layer {
     readySprite.align = "center";
     readySprite.setPercentage("width", this.width, 15, "height");
 
-    this.readyAnim = new Engine.Animations.Keyframe(readySprite, [{
+    this.readyAnim = new Engine.Animations.Keyframe(readySprite, [
+      {
         x: this.width / 2,
         y: this.height / 2,
         opacity: 1,
@@ -35,12 +36,15 @@ Game.Layers.Play.Ready = class Ready extends Engine.Layer {
 
     if (this.readyAnim.playing) {
       this.readyAnim.update(span);
-    } else {
+    }
+    else {
       this.screen.removeLayer(this);
     }
   }
 
   onKeyDown() {
+    this.disposeEventListeners()
+
     this.ready = true;
     this.readyAnim.play();
     this.screen.prependLayer(Game.Layers.Play.Snake);

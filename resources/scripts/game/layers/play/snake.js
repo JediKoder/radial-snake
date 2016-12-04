@@ -1,5 +1,6 @@
 Game.Layers.Play.Snake = class Snake extends Engine.Layer {
   constructor(screen) {
+    console.log('Initializzing snake layer')
     super(screen);
 
     this.snakes = [
@@ -10,10 +11,11 @@ Game.Layers.Play.Snake = class Snake extends Engine.Layer {
         Math.PI / 4,
         100,
         "FireBrick",
-        this.keyStates,{
-        keys: {
-          left: 37, // left
-          right: 39
+        this.keyStates,
+        {
+          keys: {
+            left: 37, // left
+            right: 39 // right
         }
       }),
 
@@ -24,10 +26,11 @@ Game.Layers.Play.Snake = class Snake extends Engine.Layer {
         (-Math.PI / 4) * 3,
         100,
         "DodgerBlue",
-        this.keyStates,{
-        keys: {
-          left: 65, // a
-          right: 68
+        this.keyStates,
+        {
+          keys: {
+            left: 65, // a
+            right: 68 // d
         }
       })
     ];
@@ -56,7 +59,9 @@ Game.Layers.Play.Snake = class Snake extends Engine.Layer {
 
     disqualifiedIndexes.forEach(index => {
       this.snakes.splice(index, 1);
-      if (this.snakes.length == 1) this.snakes[0].score++;
+      if (this.snakes.length == 1) {
+        this.snakes[0].score++;
+      }
     });
   }
 };

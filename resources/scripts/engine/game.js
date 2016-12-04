@@ -1,5 +1,3 @@
-let onKeyDown = undefined;
-let onKeyUp = undefined;
 Engine.Game = class Game {
   get fps() {
     return 60;
@@ -122,7 +120,7 @@ Engine.Game = class Game {
   }
 
   unloadScreen() {
-    _.omit(this.assets, this.screen && this.screen.unload());
+    _.omit(this.assets, this.screen.unload && this.screen.unload());
   }
 
   extendAssets(assets) {

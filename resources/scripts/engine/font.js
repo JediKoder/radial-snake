@@ -6,18 +6,18 @@ Engine.Font = class Font extends Restoreable {
   set src(src) {
     this._src = src;
 
-    if (this.onload != null) var done = _.after(2, this.onload);
+    if (this.onload) var done = _.after(2, this.onload);
 
-    this.atlas = new Image;
+    this.atlas = new Image();
     this.atlas.onload = done;
     this.atlas.src = `${src}.png`;
 
     $.getJSON(`${src}.json`, data => {
       this.data = data;
-      if (done) { done(); }
+      if (done) done();
     });
 
-    return src;
+    return this._src;
   }
 
   constructor() {
@@ -25,9 +25,8 @@ Engine.Font = class Font extends Restoreable {
     this.charSpritesMap = {};
   }
 
-  createTexture(text, options) {
-    if (options) var { noOffsets, noSpaces } = options;
-
+  createTexture(text, options = {}) {
+    let { noOffsets, noSpaces } = options;
     let canvas = doc.newEl("canvas");
     let context = canvas.getContext("2d");
     let height = canvas.height = this.data.height;
@@ -35,12 +34,12 @@ Engine.Font = class Font extends Restoreable {
     let width = canvas.width = _.reduce(text, (width, c) => {
       if (noSpaces) {
         return width + this.getCharSprite(c).width;
-      } else {
-        return width + this.data.chars[c].width;
       }
+
+      return width + this.data.chars[c].width;
     }, 0);
 
-    if (this.size !== null) {
+    if (this.size) {
       let ratio = this.size / this.data.size;
       canvas.height *= ratio;
       canvas.width *= ratio;
@@ -90,7 +89,7 @@ Engine.Font = class Font extends Restoreable {
   }
 
   getCharSprite(char) {
-    if (this.charSpritesMap[char] != null) return this.charSpritesMap[char];
+    if (this.charSpritesMap[char]) return this.charSpritesMap[char];
 
     let { x, y, width, height } = this.data.chars[char].rect;
     let canvas = doc.newEl("canvas");
@@ -99,6 +98,6 @@ Engine.Font = class Font extends Restoreable {
     canvas.height = height;
     context.drawImage(this.atlas, x, y, width, height, 0, 0, width, height);
 
-    this.charSpritesMap[char] = new Engine.Sprite(canvas);
+    return this.charSpritesMap[char] = new Engine.Sprite(canvas);
   }
 };

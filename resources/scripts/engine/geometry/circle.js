@@ -7,7 +7,8 @@ Engine.Geometry.Circle = class Circle {
     if (rad1 > rad2) {
       this.rad1 = rad1.trim(9, "floor");
       this.rad2 = rad2.trim(9, "ceil");
-    } else {
+    }
+    else {
       this.rad1 = rad1.trim(9, "ceil");
       this.rad2 = rad2.trim(9, "floor");
     }

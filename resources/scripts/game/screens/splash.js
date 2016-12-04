@@ -25,7 +25,6 @@ Game.Screens.Splash = class Splash extends Engine.Screen {
     ]);
 
     this.splashAnim.play();
-
   }
 
   load(assetsLoader) {

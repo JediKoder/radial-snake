@@ -1,11 +1,11 @@
-import Pack from "../package.json";
+const Pack = require("../package.json");
 
-exports.register.attributes = {
+register.attributes = {
   name: "endpoints",
   version: Pack.version
 };
 
-export function register(server, options, next) {
+function register(server, options, next) {
   server.route({
     method: "GET",
     path: "/scripts/{path*}",
@@ -68,3 +68,7 @@ export function register(server, options, next) {
 
   next();
 }
+
+module.exports = {
+  register
+};

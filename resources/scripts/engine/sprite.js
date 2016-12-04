@@ -5,7 +5,7 @@ Engine.Sprite = class Sprite {
     this.y = 0;
     this.width = texture.width;
     this.height = texture.height;
-    this.pivot = {x: 0, y: 0};
+    this.pivot = { x: 0, y: 0 };
     this.opacity = 1;
   }
 
@@ -14,15 +14,15 @@ Engine.Sprite = class Sprite {
     context.globalAlpha = this.opacity;
 
     switch (this.align) {
-      case "top-left": case "left-top": this.pivot = {x: 0, y: 0}; break;
-      case "top-right": case "right-top": this.pivot = {x: this.width, y: 0}; break;
-      case "bottom-left": case "left-bottom": this.pivot = {x: 0, y: this.height}; break;
-      case "bottom-right": case "right-bottom": this.pivot = {x: this.width, y: this.height}; break;
-      case "middle": case "center": this.pivot = {x: this.width / 2, y: this.height / 2}; break;
-      case "left": this.pivot = {x: 0, y: this.height / 2}; break;
-      case "top": this.pivot = {x: this.width / 2, y: 0}; break;
-      case "right": this.pivot = {x: this.width, y: this.height / 2}; break;
-      case "bottom": this.pivot = {x: this.width / 2, y: this.height}; break;
+      case "top-left": case "left-top": this.pivot = { x: 0, y: 0 }; break;
+      case "top-right": case "right-top": this.pivot = { x: this.width, y: 0 }; break;
+      case "bottom-left": case "left-bottom": this.pivot = { x: 0, y: this.height }; break;
+      case "bottom-right": case "right-bottom": this.pivot = { x: this.width, y: this.height }; break;
+      case "middle": case "center": this.pivot = { x: this.width / 2, y: this.height / 2 }; break;
+      case "left": this.pivot = { x: 0, y: this.height / 2 }; break;
+      case "top": this.pivot = { x: this.width / 2, y: 0 }; break;
+      case "right": this.pivot = { x: this.width, y: this.height / 2 }; break;
+      case "bottom": this.pivot = { x: this.width / 2, y: this.height }; break;
     }
 
     context.drawImage(

@@ -1,6 +1,6 @@
-import Os from "os";
+const Os = require("os");
 
-export function local() {
+function local() {
   let interfaces = Os.networkInterfaces();
   let addresses = [];
 
@@ -16,3 +16,7 @@ export function local() {
 
   return addresses[0];
 }
+
+module.exports = {
+  local
+};

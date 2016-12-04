@@ -8,7 +8,7 @@ build-watch:
 	coffee -o ./resources/scripts -cw ./resources/coffee-scripts
 
 run:
-	coffee server.coffee
+	coffee server.js
 
 run-watch:
-	nodemon server.coffee
+	nodemon server.js

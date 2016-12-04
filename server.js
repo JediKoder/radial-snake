@@ -1,9 +1,9 @@
-import Async from "async";
-import Hapi from "hapi";
-import Inert from "inert";
-import Endpoints from "./routes/endpoints";
-import IpGrabber from "./helpers/ip_grabber";
-import Pages from "./routes/pages";
+const Async = require("async");
+const Hapi = require("hapi");
+const Inert = require("inert");
+const Endpoints = require("./routes/endpoints");
+const IpGrabber = require("./helpers/ip_grabber");
+const Pages = require("./routes/pages");
 
 let localIp = IpGrabber.local();
 let port = 8000;
@@ -20,18 +20,18 @@ let server = new Hapi.Server({
 
 server.connection({ port: process.env.PORT || port });
 
-server.ext("onPreResponse", (req, next) => {
+server.ext("onPreResponse", (req, rep) => {
   let res = req.response;
 
   console.log("Outcoming response:");
-  console.log("in: ${new Date}");
-  console.log("to: ${req.info.remoteAddress}");
-  console.log("method: ${req.method}");
-  console.log("url: ${req.url.path}");
+  console.log(`in: ${new Date}`);
+  console.log(`to: ${req.info.remoteAddress}`);
+  console.log(`method: ${req.method}`);
+  console.log(`url: ${req.url.path}`);
   console.log(`status: ${res.statusCode || res.output.statusCode}`);
   console.log();
 
-  next();
+  rep.continue();
 });
 
 Async.series([
@@ -45,7 +45,7 @@ Async.series([
   console.log();
   console.log("---------- -------- ------ ---- --");
   console.log("----- ---- --- -- -");
-  console.log("Server running at ${localIp}:${port}");
+  console.log(`Server running at ${localIp}:${port}`);
   console.log("----- ---- --- -- -");
   console.log("---------- -------- ------ ---- --");
   console.log();

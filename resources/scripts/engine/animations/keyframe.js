@@ -119,7 +119,8 @@ Engine.Animations.Keyframe = class Keyframe {
 
     switch (easing) {
       case "in": r = Math.sin((r * Math.PI) / 2); break;
-      case "out": r = return Math.cos((r * Math.PI) / 2); break;
+      case "out": r = Math.cos((r * Math.PI) / 2); break;
+    }
 
     return ((b - a) * r) + a;
   }

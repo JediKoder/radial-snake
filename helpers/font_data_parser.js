@@ -1,9 +1,9 @@
-import _ from "underscore";
-import Async from "async";
-import Fs from "fs";
-import { DOMParser } from "xmldom";
+const _ = require("underscore");
+const Async = require("async");
+const Fs = require("fs");
+const { DOMParser } = require("xmldom");
 
-export function xmlsToJsons(path, callback = _.noop) {
+function xmlsToJsons(path, callback = _.noop) {
   Fs.readdir(path, (err, files) => {
     if (err) return callback(err);
 
@@ -18,7 +18,7 @@ export function xmlsToJsons(path, callback = _.noop) {
   });
 }
 
-export function xmlToJson(path, callback = _.noop) {
+function xmlToJson(path, callback = _.noop) {
   Async.waterfall([
     (next) => {
       Fs.readFile(`${path}.xml`, function(err, xmlBuf) {
@@ -72,3 +72,8 @@ export function xmlToJson(path, callback = _.noop) {
 function extractIntegers(srcstr) {
   return srcstr.split(" ").map((substr) => parseInt(substr));
 }
+
+module.exports = {
+  xmlToJson,
+  xmlsToJsons
+};

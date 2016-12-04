@@ -1,10 +1,10 @@
-import Boom from "boom";
-import Hapi from "hapi";
-import IpGrabber from "./ip_grabber";
+const Boom = require("boom");
+const Hapi = require("hapi");
+const IpGrabber = require("./ip_grabber");
 
 const sourcePermissions = [IpGrabber.local(), "127.0.0.1", "localhost"];
 
-export function file(path, permissions, req, rep) {
+function file(path, permissions, req, rep) {
   permissions = permissions.concat(sourcePermissions);
   let remoteAddress = req.info.remoteAddress;
 
@@ -15,3 +15,7 @@ export function file(path, permissions, req, rep) {
 
   rep.file(path);
 }
+
+module.exports = {
+  file
+};

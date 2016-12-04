@@ -1,17 +1,17 @@
 Engine.Screen = class Screen {
   get width() {
-    this.game.canvas.width;
+    return this.game.canvas.width;
   }
 
   get height() {
-    this.game.canvas.height;
+    return this.game.canvas.height;
   }
 
   constructor(game) {
     this.game = game;
     this.age = 0;
     this.creation = new Date().getTime();
-    this.assets = _(game.assets).clone();
+    this.assets = _.clone(game.assets);
     this.keyStates = game.keyStates;
     this.layers = [];
   }
@@ -20,8 +20,7 @@ Engine.Screen = class Screen {
     this.layers.forEach(layer => {
       layer.age += span;
       if (layer.update) layer.update(span);
-    }
-    );
+    });
   }
 
   draw(context) {

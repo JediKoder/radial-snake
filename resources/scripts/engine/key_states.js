@@ -4,7 +4,7 @@ Engine.KeyStates = class KeyStates {
   }
 
   get(k) {
-    this.states[k];
+    return this.states[k];
   }
 
   add(k) {

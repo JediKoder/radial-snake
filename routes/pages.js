@@ -1,13 +1,13 @@
-import Hapi from "hapi";
-import Pack from "../package.json";
-import Permitter from "../helpers/permitter";
+const Hapi = require("hapi");
+const Pack = require("../package.json");
+const Permitter = require("../helpers/permitter");
 
 register.attributes = {
   name: "pages",
   version: Pack.version
 };
 
-export function register(server, options, next) {
+function register(server, options, next) {
   server.route({ method: "GET", path: "/", handler: getGame });
   server.route({ method: "GET", path: "/test", handler: getSpecRunner });
 
@@ -27,3 +27,7 @@ function getSpecRunner(req, rep) {
 
   Permitter.file(path, permissions, req, rep);
 }
+
+module.exports = {
+  register
+};
