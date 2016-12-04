@@ -1,4 +1,4 @@
-Game.Layers.Play.Snake = class Snake extends Engine.Layer {
+Game.Screens.Play.Snake = class Snake extends Engine.Layer {
   constructor(screen) {
     super(screen);
 
@@ -34,7 +34,7 @@ Game.Layers.Play.Snake = class Snake extends Engine.Layer {
       })
     ];
 
-    screen.appendLayer(Game.Layers.Play.Score, this.snakes);
+    screen.appendLayer(Game.Screens.Play.Score, this.snakes);
   }
 
   draw(context) {

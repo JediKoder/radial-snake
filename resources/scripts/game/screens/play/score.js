@@ -1,4 +1,4 @@
-Game.Layers.Play.Score = class Score extends Engine.Layer {
+Game.Screens.Play.Score = class Score extends Engine.Layer {
   constructor(game, snakes) {
     super(game);
     this.snakes = snakes;

@@ -1,4 +1,4 @@
-Game.Layers.Play.Ready = class Ready extends Engine.Layer {
+Game.Screens.Play.Ready = class Ready extends Engine.Layer {
   get events() {
     return {
       "keydown": "onKeyDown"
@@ -47,6 +47,6 @@ Game.Layers.Play.Ready = class Ready extends Engine.Layer {
 
     this.ready = true;
     this.readyAnim.play();
-    this.screen.prependLayer(Game.Layers.Play.Snake);
+    this.screen.prependLayer(Game.Screens.Play.Snake);
   }
 };

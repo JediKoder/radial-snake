@@ -1,9 +1,6 @@
 Game = {
   Entities: {},
-  Screens: {},
-  Layers: {
-    Play: {}
-  }
+  Screens: {}
 };
 
 Engine = {
