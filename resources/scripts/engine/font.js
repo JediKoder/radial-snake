@@ -27,7 +27,7 @@ Engine.Font = class Font extends Restoreable {
 
   createTexture(text, options = {}) {
     let { noOffsets, noSpaces } = options;
-    let canvas = doc.newEl("canvas");
+    let canvas = document.createElement("canvas");
     let context = canvas.getContext("2d");
     let height = canvas.height = this.data.height;
 
@@ -48,7 +48,7 @@ Engine.Font = class Font extends Restoreable {
 
     let offset = 0;
 
-    text.map((i, c) => {
+    _.map(text, (c, i) => {
       return this.getCharSprite(c);
     })
     .forEach((charSprite, i) => {
@@ -69,7 +69,7 @@ Engine.Font = class Font extends Restoreable {
       }
 
       if (this.color) {
-        let overlayCanvas = doc.newEl("canvas");
+        let overlayCanvas = document.createElement("canvas");
         let overlayContext = overlayCanvas.getContext("2d");
         overlayCanvas.width = width;
         overlayCanvas.height = height;
@@ -92,7 +92,7 @@ Engine.Font = class Font extends Restoreable {
     if (this.charSpritesMap[char]) return this.charSpritesMap[char];
 
     let { x, y, width, height } = this.data.chars[char].rect;
-    let canvas = doc.newEl("canvas");
+    let canvas = document.createElement("canvas");
     let context = canvas.getContext("2d");
     canvas.width = width;
     canvas.height = height;

@@ -17,7 +17,7 @@ Engine.Layer = class Layer {
   initEventListeners() {
     if (!this.events) return;
 
-    this.events.forEach((event, listener) => {
+    _.each(this.events, (listener, event) => {
       this.screen.addEventListener(event, this[listener], this);
     });
   }
@@ -25,7 +25,7 @@ Engine.Layer = class Layer {
   disposeEventListeners() {
     if (!this.events) return;
 
-    this.events.forEach((event, listener) => {
+    _.each(this.events, (listener, event) => {
       this.screen.removeEventListener(event, this[listener]);
     });
   }

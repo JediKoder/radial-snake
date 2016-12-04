@@ -55,7 +55,7 @@ Game.Entities.Snake = class Snake {
     else {
       var { x: lastX, y: lastY, r: lastR } = this.currShape;
 
-      if (this.direction === "left") {
+      if (this.direction == "left") {
         var lastRad = this.rad + (0.5 * Math.PI);
         ({ x: this.x, y: this.y } = this.currShape.getPoint(this.currShape.rad1));
         this.rad = this.currShape.rad1 - (0.5 * Math.PI);

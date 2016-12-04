@@ -1,6 +1,5 @@
 Game.Layers.Play.Snake = class Snake extends Engine.Layer {
   constructor(screen) {
-    console.log('Initializzing snake layer')
     super(screen);
 
     this.snakes = [

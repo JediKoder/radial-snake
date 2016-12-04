@@ -1,4 +1,4 @@
-window.Restoreable = class Restoreable {
+Restoreable = class Restoreable {
   constructor(...restoreableProps) {
     this._restoreableProps = [];
     this._restoreableStates = [];

@@ -55,7 +55,7 @@ Engine.Screen = class Screen {
   initEventListeners() {
     if (!this.events) return;
 
-    this.events.forEach((event, listener) => {
+    _.each(this.events, (listener, event) => {
       this.addEventListener(event, this[listener]);
     });
   }
@@ -63,7 +63,7 @@ Engine.Screen = class Screen {
   disposeEventListeners() {
     if (!this.events) return;
 
-    this.events.forEach((event, listener) => {
+    _.each(this.events, (listener, event) => {
       this.removeEventListener(event, this[listener]);
     });
 

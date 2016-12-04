@@ -19,7 +19,7 @@ Game.Layers.Play.Score = class Score extends Engine.Layer {
   update(span) {
     this.snakes.forEach(snake => {
       let i = snake.index;
-      if (this.scores[i] === snake.score) return;
+      if (this.scores[i] == snake.score) return;
       this.scoreSprites[i] = this.createScoreSprite(snake, i);
       this.scores[i] = snake.score;
     });

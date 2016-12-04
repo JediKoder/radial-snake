@@ -21,7 +21,7 @@ Engine.Animations.Keyframe = class Keyframe {
       return trimmedKeyframes;
     }, {});
 
-    keyframes[0].forEach((k, v) => {
+    _.each(keyframes[0], (v, k) => {
       if (this.animables.includes(k)) sprite[k] = v;
     });
   }

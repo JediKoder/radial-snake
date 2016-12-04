@@ -1,4 +1,4 @@
-window.Game = {
+Game = {
   Entities: {},
   Screens: {},
   Layers: {
@@ -6,7 +6,7 @@ window.Game = {
   }
 };
 
-window.Engine = {
+Engine = {
   Animations: {},
   Geometry: {}
 };
