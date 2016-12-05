@@ -1,4 +1,4 @@
-Engine.Font = class Font extends Restoreable {
+Engine.Font = class Font extends Restorable {
   get src() {
     return this._src;
   }
