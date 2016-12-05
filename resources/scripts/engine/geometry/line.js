@@ -17,14 +17,23 @@ Engine.Geometry.Line = class Line {
   }
 
   hasPoint(x, y) {
-    if (!this.boundsHasPoint(x, y)) return false;
+    if (!this.boundsHavePoint(x, y)) return false;
     let m = ((this.y2 - this.y1) / (this.x2 - this.x1)).trim(9);
     return y - this.y1 == m * (x - this.x1);
   }
 
-  boundsHasPoint(x, y) {
+  boundsHavePoint(x, y) {
     return x.isBetween(this.x1, this.x2) &&
     y.isBetween(this.y1, this.y2);
+  }
+
+  getIntersection(shape) {
+    if (shape instanceof Engine.Geometry.Line)
+      return this.getLineIntersection(shape);
+    if (shape instanceof Engine.Geometry.Circle)
+      return this.getCircleIntersection(shape);
+    if (shape instanceof Engine.Geometry.Polygon)
+      return this.getPolygonIntersection(shape);
   }
 
   getLineIntersection(l) {
@@ -37,11 +46,15 @@ Engine.Geometry.Line = class Line {
 
     if (x.isBetween(this.x1, this.x2) && x.isBetween(l.x1, l.x2) &&
        y.isBetween(this.y1, this.y2) && y.isBetween(l.y1, l.y2)) {
-      return {x, y};
+      return { x, y };
     }
   }
 
   getCircleIntersection(c) {
-    return Engine.Geometry.Circle.prototype.getLineIntersection.call(c, this);
+    return c.getLineIntersection(this);
+  }
+
+  getPolygonIntersection(p) {
+    return p.getLineIntersection(this);
   }
 };

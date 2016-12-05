@@ -48,7 +48,7 @@ Game.Screens.Play.Snake = class Snake extends Engine.Layer {
     let allSnakes = this.snakes.slice();
 
     this.snakes.forEach((snake, i) => {
-      snake.update(span);
+      snake.update(span, this.width, this.height);
       let selfIntersection = snake.getSelfIntersection();
       if (selfIntersection != null) disqualifiedIndexes.push(i);
 

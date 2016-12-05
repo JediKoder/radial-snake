@@ -39,42 +39,49 @@ Game.Entities.Snake = class Snake {
 
       context.stroke();
       context.restore();
-    }
-    );
+    });
   }
 
-  update(span) {
+  update(span, width, height) {
     let step = (this.v * span) / 1000;
 
+    this.updateLastBit(step, width, height);
+    this.updateCurrShape(step, width, height);
+    this.cycleThrough(step, width, height);
+  }
+
+  updateLastBit(step, width, height) {
     if (this.currShape instanceof Engine.Geometry.Line) {
-      var { x: lastX, y: lastY } = this;
+      let { x: lastX, y: lastY } = this;
       this.x = this.currShape.x2;
       this.y = this.currShape.y2;
       this.lastBit = new Engine.Geometry.Line(lastX, lastY, this.x, this.y);
     }
     else {
-      var { x: lastX, y: lastY, r: lastR } = this.currShape;
+      let { x: lastX, y: lastY, r: lastR } = this.currShape;
 
       if (this.direction == "left") {
-        var lastRad = this.rad + (0.5 * Math.PI);
+        let lastRad = this.rad + (0.5 * Math.PI);
         ({ x: this.x, y: this.y } = this.currShape.getPoint(this.currShape.rad1));
         this.rad = this.currShape.rad1 - (0.5 * Math.PI);
         this.lastBit = new Engine.Geometry.Circle(lastX, lastY, lastR, this.currShape.rad1, lastRad);
       }
       else {
-        var lastRad = this.rad - (0.5 * Math.PI);
+        let lastRad = this.rad - (0.5 * Math.PI);
         ({ x: this.x, y: this.y } = this.currShape.getPoint(this.currShape.rad2));
         this.rad = this.currShape.rad2 + (0.5 * Math.PI);
         this.lastBit = new Engine.Geometry.Circle(lastX, lastY, lastR, lastRad, this.currShape.rad2);
       }
     }
+  }
 
+  updateCurrShape(step, width, height, cycledThrough) {
     if (this.keyStates.get(this.leftKey))
       var direction = "left";
     else if (this.keyStates.get(this.rightKey))
       var direction = "right";
 
-    if (direction != this.direction) {
+    if (direction != this.direction || cycledThrough) {
       this.direction = direction;
 
       let angle;
@@ -117,6 +124,26 @@ Game.Entities.Snake = class Snake {
     }
   }
 
+  cycleThrough(step, width, height) {
+    let intersectionPoint = this.getCanvasIntersection(width, height);
+    if (!intersectionPoint) return;
+
+    intersectionPoint = intersectionPoint[0];
+
+    if (intersectionPoint.x == 0)
+      this.x += width;
+    else if (intersectionPoint.x == width)
+      this.x -= width;
+
+    if (intersectionPoint.y == 0)
+      this.y += height;
+    else if (intersectionPoint.y == height)
+      this.y -= height;
+
+    this.updateCurrShape(step, width, height, true);
+    this.lastBit = new Engine.Geometry.Line(this.x, this.y, this.x, this.y);
+  }
+
   getSelfIntersection() {
     if (this.currShape instanceof Engine.Geometry.Circle &&
        Math.abs(this.currShape.rad1 - this.currShape.rad2) >= 2 * Math.PI) {
@@ -130,12 +157,9 @@ Game.Entities.Snake = class Snake {
 
     let result;
 
-    this.shapes.slice(0, -2).some(s => {
-      if (s instanceof Engine.Geometry.Line)
-        return result = this.lastBit.getLineIntersection(s);
-      else
-        return result = this.lastBit.getCircleIntersection(s);
-    });
+    this.shapes.slice(0, -2).some(s =>
+      result = this.lastBit.getIntersection(s)
+    );
 
     return result;
   }
@@ -143,13 +167,21 @@ Game.Entities.Snake = class Snake {
   getSnakeIntersection(snake) {
     let result;
 
-    snake.shapes.some(s => {
-      if (s instanceof Engine.Geometry.Line)
-        return result = this.lastBit.getLineIntersection(s);
-      else
-        return result = this.lastBit.getCircleIntersection(s);
-    });
+    snake.shapes.some(s =>
+      result = this.lastBit.getIntersection(s)
+    );
 
     return result;
+  }
+
+  getCanvasIntersection(width, height) {
+    let canvasPolygon = new Engine.Geometry.Polygon(
+      new Engine.Geometry.Line(0, 0, width, 0), // right
+      new Engine.Geometry.Line(width, 0, width, height), // down
+      new Engine.Geometry.Line(width, height, 0, height), // left
+      new Engine.Geometry.Line(0, height, 0, 0) // up
+    );
+
+    return canvasPolygon.getIntersection(this.lastBit);
   }
 };

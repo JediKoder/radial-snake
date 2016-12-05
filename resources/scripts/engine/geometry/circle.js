@@ -56,6 +56,15 @@ Engine.Geometry.Circle = class Circle {
     return this.getRad(x, y) != null;
   }
 
+  getIntersection(shape) {
+    if (shape instanceof Engine.Geometry.Line)
+      return this.getLineIntersection(shape);
+    if (shape instanceof Engine.Geometry.Circle)
+      return this.getCircleIntersection(shape);
+    if (shape instanceof Engine.Geometry.Polygon)
+      return this.getPolygonIntersection(shape);
+  }
+
   getCircleIntersection(c) {
     let dx = c.x - this.x;
     let dy = c.y - this.y;
@@ -126,11 +135,15 @@ Engine.Geometry.Circle = class Circle {
     }))
     .filter(p => {
       return this.hasPoint(p.x, p.y) &&
-        l.boundsHasPoint(p.x, p.y);
+        l.boundsHavePoint(p.x, p.y);
     });
 
     interPoints = _.uniq(interPoints, p => `(${p.x}, ${p.y})`);
 
     if (interPoints.length > 0) return interPoints;
+  }
+
+  getPolygonIntersection(p) {
+    return p.getCircleIntersection(this);
   }
 };
