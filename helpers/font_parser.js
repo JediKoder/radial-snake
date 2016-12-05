@@ -13,6 +13,10 @@ function xmlsToJsons(path, callback = _.noop) {
       xmlToJson(`${path}/${fileName}`, next);
     },
     (err) => {
+      if (!err) console.log(
+        'All fonts have been successfully parsed!'
+      );
+
       callback(err);
     });
   });
@@ -65,6 +69,10 @@ function xmlToJson(path, callback = _.noop) {
       });
     }
   ], (err) => {
+    if (!err) console.log(
+      `Font ${path} has been successfully parsed...`
+    );
+
     callback(err);
   });
 };
