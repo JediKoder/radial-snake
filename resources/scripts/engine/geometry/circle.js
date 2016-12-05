@@ -15,12 +15,12 @@ Engine.Geometry.Circle = class Circle {
   }
 
   getX(rad) {
-    if (!rad.isBetween(this.rad1, this.rad2)) return;
+    if (!rad.trim(9).isBetween(this.rad1, this.rad2)) return;
     return ((this.r * Math.cos(rad)) + this.x).trim(9);
   }
 
   getY(rad) {
-    if (!rad.isBetween(this.rad1, this.rad2)) return;
+    if (!rad.trim(9).isBetween(this.rad1, this.rad2)) return;
     return ((this.r * Math.sin(rad)) + this.y).trim(9);
   }
 
@@ -35,7 +35,7 @@ Engine.Geometry.Circle = class Circle {
   getRad(x, y) {
     let rad = Math.atan2(y - this.y, x - this.x);
 
-    if (rad && rad.isBetween(this.rad1, this.rad2)) {
+    if (rad != null && rad.isBetween(this.rad1, this.rad2)) {
       return rad;
     }
 
@@ -53,7 +53,7 @@ Engine.Geometry.Circle = class Circle {
   }
 
   hasPoint(x, y) {
-    return !!this.getRad(x, y);
+    return this.getRad(x, y) != null;
   }
 
   getCircleIntersection(c) {
