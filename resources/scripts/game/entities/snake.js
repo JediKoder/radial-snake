@@ -45,43 +45,47 @@ Game.Entities.Snake = class Snake {
   update(span, width, height) {
     let step = (this.v * span) / 1000;
 
-    this.updateLastBit(step, width, height);
-    this.updateCurrShape(step, width, height);
+    this.updateShapes(step, width, height);
     this.cycleThrough(step, width, height);
   }
 
-  updateLastBit(step, width, height) {
+  updateShapes(step, width, height, options = {}) {
     if (this.currShape instanceof Engine.Geometry.Line) {
-      let { x: lastX, y: lastY } = this;
-      this.x = this.currShape.x2;
-      this.y = this.currShape.y2;
+      let lastX = options.lastX || this.x;
+      let lastY = options.lastY || this.y;
+      this.x = options.x || this.currShape.x2;
+      this.y = options.y || this.currShape.y2;
       this.lastBit = new Engine.Geometry.Line(lastX, lastY, this.x, this.y);
     }
     else {
-      let { x: lastX, y: lastY, r: lastR } = this.currShape;
+      let lastX = options.lastX || this.currShape.x;
+      let lastY = options.lastY || this.currShape.y;
+      let lastR = options.lastR || this.currShape.r;
 
       if (this.direction == "left") {
         let lastRad = this.rad + (0.5 * Math.PI);
-        ({ x: this.x, y: this.y } = this.currShape.getPoint(this.currShape.rad1));
+        let currShapePoint = this.currShape.getPoint(this.currShape.rad1);
+        this.x = options.x || currShapePoint.x;
+        this.y = options.y || currShapePoint.y;
         this.rad = this.currShape.rad1 - (0.5 * Math.PI);
         this.lastBit = new Engine.Geometry.Circle(lastX, lastY, lastR, this.currShape.rad1, lastRad);
       }
       else {
         let lastRad = this.rad - (0.5 * Math.PI);
-        ({ x: this.x, y: this.y } = this.currShape.getPoint(this.currShape.rad2));
+        let currShapePoint = this.currShape.getPoint(this.currShape.rad2);
+        this.x = options.x || currShapePoint.x;
+        this.y = options.y || currShapePoint.y;
         this.rad = this.currShape.rad2 + (0.5 * Math.PI);
         this.lastBit = new Engine.Geometry.Circle(lastX, lastY, lastR, lastRad, this.currShape.rad2);
       }
     }
-  }
 
-  updateCurrShape(step, width, height, cycledThrough) {
     if (this.keyStates.get(this.leftKey))
       var direction = "left";
     else if (this.keyStates.get(this.rightKey))
       var direction = "right";
 
-    if (direction != this.direction || cycledThrough) {
+    if (direction != this.direction || options.force) {
       this.direction = direction;
 
       let angle;
@@ -129,19 +133,23 @@ Game.Entities.Snake = class Snake {
     if (!intersectionPoint) return;
 
     intersectionPoint = intersectionPoint[0];
+    let { x, y } = this;
 
     if (intersectionPoint.x == 0)
-      this.x += width;
+      x += width;
     else if (intersectionPoint.x == width)
-      this.x -= width;
+      x -= width;
 
     if (intersectionPoint.y == 0)
-      this.y += height;
+      y += height;
     else if (intersectionPoint.y == height)
-      this.y -= height;
+      y -= height;
 
-    this.updateCurrShape(step, width, height, true);
-    this.lastBit = new Engine.Geometry.Line(this.x, this.y, this.x, this.y);
+    this.updateShapes(step, width, height, {
+      force: true,
+      x: x,
+      y: y
+    });
   }
 
   getSelfIntersection() {
@@ -175,11 +183,12 @@ Game.Entities.Snake = class Snake {
   }
 
   getCanvasIntersection(width, height) {
+    // canvas polygon
     let canvasPolygon = new Engine.Geometry.Polygon(
-      new Engine.Geometry.Line(0, 0, width, 0), // right
-      new Engine.Geometry.Line(width, 0, width, height), // down
-      new Engine.Geometry.Line(width, height, 0, height), // left
-      new Engine.Geometry.Line(0, height, 0, 0) // up
+      new Engine.Geometry.Line(0, 0, width, 0),
+      new Engine.Geometry.Line(width, 0, width, height),
+      new Engine.Geometry.Line(width, height, 0, height),
+      new Engine.Geometry.Line(0, height, 0, 0)
     );
 
     return canvasPolygon.getIntersection(this.lastBit);
