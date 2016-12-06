@@ -143,7 +143,7 @@ Engine.Geometry.Circle = class Circle {
     if (interPoints.length > 0) return interPoints;
   }
 
-  getPolygonIntersection(point) {
-    return point.getCircleIntersection(this);
+  getPolygonIntersection(polygon) {
+    return polygon.getCircleIntersection(this);
   }
 };

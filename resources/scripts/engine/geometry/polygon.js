@@ -18,21 +18,21 @@ Engine.Geometry.Polygon = class Polygon {
       return this.getPolygonIntersection(shape);
   }
 
-  getLineIntersection(l) {
+  getLineIntersection(line) {
     let result;
-    this.bounds.some(b => result = l.getLineIntersection(b));
+    this.bounds.some(bound => result = line.getLineIntersection(bound));
     return result && [].concat(result);
   }
 
-  getCircleIntersection(c) {
+  getCircleIntersection(circle) {
     let result;
-    this.bounds.some(b => result = c.getLineIntersection(b));
+    this.bounds.some(bound => result = circle.getLineIntersection(bound));
     return result && [].concat(result);
   }
 
-  getPolygonIntersection(p) {
+  getPolygonIntersection(polygon) {
     let result;
-    this.bounds.some(b => result = p.getLineIntersection(b));
+    this.bounds.some(bound => result = polygon.getLineIntersection(bound));
     return result && [].concat(result);
   }
 };
