@@ -96,9 +96,9 @@ Engine.Animations.Keyframe = class Keyframe {
   findStartKeyframe(keyframes) {
     let resultIndex;
 
-    keyframes.some((keyframe, currentIndex) => {
+    keyframes.some((keyframe, currIndex) => {
       if (keyframe.frame >= (this.frame || 1)) {
-        resultIndex = currentIndex;
+        resultIndex = currIndex;
         return true;
       }
     });

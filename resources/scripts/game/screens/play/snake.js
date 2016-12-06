@@ -44,24 +44,27 @@ Game.Screens.Play.Snake = class Snake extends Engine.Layer {
   }
 
   update(span) {
+    if (!this.snakes.length) return;
+
     let disqualifiedIndexes = [];
     let allSnakes = this.snakes.slice();
 
-    this.snakes.forEach((snake, i) => {
+    this.snakes.forEach((snake, currIndex) => {
       snake.update(span, this.width, this.height);
       let selfIntersection = snake.getSelfIntersection();
-      if (selfIntersection != null) disqualifiedIndexes.push(i);
+      if (selfIntersection) disqualifiedIndexes.push(currIndex);
 
-      this.snakes.forEach((rival, j) => {
-        if (i == j) return;
+      this.snakes.forEach((rival, rivalIndex) => {
+        if (currIndex == rivalIndex) return;
         let snakeIntersection = snake.getSnakeIntersection(rival);
-        if (snakeIntersection != null) disqualifiedIndexes.push(i);
+        if (snakeIntersection) disqualifiedIndexes.push(currIndex);
       });
     });
 
     disqualifiedIndexes.forEach(index => this.snakes.splice(index, 1));
 
-    if (this.snakes.length > 1 || this.matchFinished) return;
+    if (this.snakes.length > 1) return;
+    if (this.matchFinished) return;
 
     let winner = this.snakes[0];
     this.screen.appendLayer(Game.Screens.Play.Win, allSnakes, winner);

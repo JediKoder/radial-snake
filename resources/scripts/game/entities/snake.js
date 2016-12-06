@@ -167,8 +167,8 @@ Game.Entities.Snake = class Snake {
 
     let result;
 
-    this.shapes.slice(0, -2).some(s =>
-      result = this.lastBit.getIntersection(s)
+    this.shapes.slice(0, -2).some(shape =>
+      result = this.lastBit.getIntersection(shape)
     );
 
     return result;
@@ -177,8 +177,8 @@ Game.Entities.Snake = class Snake {
   getSnakeIntersection(snake) {
     let result;
 
-    snake.shapes.some(s =>
-      result = this.lastBit.getIntersection(s)
+    snake.shapes.some(shape =>
+      result = this.lastBit.getIntersection(shape)
     );
 
     return result;
