@@ -147,6 +147,8 @@ Game.Entities.Snake = class Snake {
 
     this.updateShapes(step, width, height, {
       force: true,
+      lastX: x,
+      lastY: y,
       x: x,
       y: y
     });
