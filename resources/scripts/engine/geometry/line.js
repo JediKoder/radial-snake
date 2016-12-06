@@ -19,7 +19,7 @@ Engine.Geometry.Line = class Line {
   hasPoint(x, y) {
     if (!this.boundsHavePoint(x, y)) return false;
     let m = ((this.y2 - this.y1) / (this.x2 - this.x1)).trim(9);
-    return y - this.y1 == m * (x - this.x1);
+    return (y - this.y1) / (x - this.x1) == m;
   }
 
   boundsHavePoint(x, y) {

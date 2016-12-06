@@ -61,14 +61,14 @@ describe("Engine.Geometry.Line class", function() {
       });
     });
 
-    describe("given parallal line", function() {
+    describe("given parallel line", function() {
       it("returns nothing", function() {
         let line = new Engine.Geometry.Line(-5, -6, 5, 4);
         expect(this.line.getLineIntersection(line)).toBeUndefined();
       });
     });
 
-    describe("given outlimits line", function() {
+    describe("given outranged line", function() {
       it("returns nothing", function() {
         let line = new Engine.Geometry.Line(10, 10, 10, 15);
         expect(this.line.getLineIntersection(line)).toBeUndefined();

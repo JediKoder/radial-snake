@@ -1,12 +1,10 @@
 Engine.Geometry.Polygon = class Polygon {
   constructor(...bounds) {
-    this.bounds = bounds;
+    this.bounds = bounds.map(coords => new Engine.Geometry.Line(...coords));
   }
 
   hasPoint(x, y) {
-    let result;
-    this.bounds.some(bound => result = bound.hasPoint(x, y));
-    return result;
+    return this.bounds.some(bound => bound.hasPoint(x, y));
   }
 
   getIntersection(shape) {
@@ -19,20 +17,32 @@ Engine.Geometry.Polygon = class Polygon {
   }
 
   getLineIntersection(line) {
-    let result;
-    this.bounds.some(bound => result = line.getLineIntersection(bound));
-    return result && [].concat(result);
+    let result = this.bounds.reduce((result, bound) => {
+      let intersection = line.getLineIntersection(bound);
+      if (intersection) result = result.concat(intersection);
+      return result;
+    }, []);
+
+    if (result.length) return result;
   }
 
   getCircleIntersection(circle) {
-    let result;
-    this.bounds.some(bound => result = circle.getLineIntersection(bound));
-    return result && [].concat(result);
+    let result = this.bounds.reduce((result, bound) => {
+      let intersection = circle.getLineIntersection(bound);
+      if (intersection) result = result.concat(intersection);
+      return result;
+    }, []);
+
+    if (result.length) return result;
   }
 
   getPolygonIntersection(polygon) {
-    let result;
-    this.bounds.some(bound => result = polygon.getLineIntersection(bound));
-    return result && [].concat(result);
+    let result = this.bounds.reduce((result, bound) => {
+      let intersection = polygon.getLineIntersection(bound);
+      if (intersection) result = result.concat(intersection);
+      return result;
+    }, []);
+
+    if (result.length) return result;
   }
 };

@@ -187,10 +187,10 @@ Game.Entities.Snake = class Snake {
   getCanvasIntersection(width, height) {
     // canvas polygon
     let canvasPolygon = new Engine.Geometry.Polygon(
-      new Engine.Geometry.Line(0, 0, width, 0),
-      new Engine.Geometry.Line(width, 0, width, height),
-      new Engine.Geometry.Line(width, height, 0, height),
-      new Engine.Geometry.Line(0, height, 0, 0)
+      [0, 0, width, 0],
+      [width, 0, width, height],
+      [width, height, 0, height],
+      [0, height, 0, 0]
     );
 
     return canvasPolygon.getIntersection(this.lastBit);
