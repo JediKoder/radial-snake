@@ -59,15 +59,14 @@ Game.Screens.Play.Snake = class Snake extends Engine.Layer {
       });
     });
 
-    disqualifiedIndexes.forEach(index => {
-      this.snakes.splice(index, 1);
-      if (this.snakes.length == 1) {
-        this.snakes[0].score++;
-      }
-    });
+    disqualifiedIndexes.forEach(index => this.snakes.splice(index, 1));
 
-    if (this.snakes.length <= 1) {
-      this.screen.appendLayer(Game.Screens.Play.Win, allSnakes, this.snakes[0]);
-    }
+    if (this.snakes.length > 1 || this.matchFinished) return;
+
+    let winner = this.snakes[0];
+    this.screen.appendLayer(Game.Screens.Play.Win, allSnakes, winner);
+    if (winner) winner.score++;
+
+    this.matchFinished = true;
   }
 };
