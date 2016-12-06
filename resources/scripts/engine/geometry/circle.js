@@ -65,17 +65,17 @@ Engine.Geometry.Circle = class Circle {
       return this.getPolygonIntersection(shape);
   }
 
-  getCircleIntersection(c) {
-    let dx = c.x - this.x;
-    let dy = c.y - this.y;
+  getCircleIntersection(circle) {
+    let dx = circle.x - this.x;
+    let dy = circle.y - this.y;
     let d = Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
 
-    if (d > this.r + c.r ||
-       d < Math.abs(this.r - c.r)) {
+    if (d > this.r + circle.r ||
+       d < Math.abs(this.r - circle.r)) {
       return;
     }
 
-    let a = ((Math.pow(this.r, 2) - Math.pow(c.r, 2)) + Math.pow(d, 2)) / (2 * d);
+    let a = ((Math.pow(this.r, 2) - Math.pow(circle.r, 2)) + Math.pow(d, 2)) / (2 * d);
     let x = this.x + ((dx * a) / d);
     let y = this.y + ((dy * a) / d);
     let h = Math.sqrt(Math.pow(this.r, 2) - Math.pow(a, 2));
@@ -92,25 +92,25 @@ Engine.Geometry.Circle = class Circle {
         y: y - ry
       }
     ]
-    .map(p => ({
-        x: p.x.trim(9),
-        y: p.y.trim(9)
+    .map(point => ({
+        x: point.x.trim(9),
+        y: point.y.trim(9)
      }));
 
-    interPoints = _.uniq(interPoints, p => `(${p.x}, ${p.y})`);
+    interPoints = _.uniq(interPoints, point => `(${point.x}, ${point.y})`);
 
-    [this, c].forEach(function(c) {
-      interPoints = interPoints.filter(p => c.hasPoint(p.x, p.y));
+    [this, circle].forEach(function(circle) {
+      interPoints = interPoints.filter(point => circle.hasPoint(point.x, point.y));
     });
 
     if (interPoints.length > 0) return interPoints;
   }
 
-  getLineIntersection(l) {
-    let x1 = l.x1 - this.x;
-    let x2 = l.x2 - this.x;
-    let y1 = l.y1 - this.y;
-    let y2 = l.y2 - this.y;
+  getLineIntersection(line) {
+    let x1 = line.x1 - this.x;
+    let x2 = line.x2 - this.x;
+    let y1 = line.y1 - this.y;
+    let y2 = line.y2 - this.y;
     let dx = x2 - x1;
     let dy = y2 - y1;
     let d = Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
@@ -129,21 +129,21 @@ Engine.Geometry.Circle = class Circle {
         y: (((-h * dx) - (Math.abs(dy) * Math.sqrt(delta))) / Math.pow(d, 2)) + this.y
       }
     ]
-    .map(p => ({
-        x: p.x.trim(9),
-        y: p.y.trim(9)
+    .map(point => ({
+        x: point.x.trim(9),
+        y: point.y.trim(9)
     }))
-    .filter(p => {
-      return this.hasPoint(p.x, p.y) &&
-        l.boundsHavePoint(p.x, p.y);
+    .filter(point => {
+      return this.hasPoint(point.x, point.y) &&
+        line.boundsHavePoint(point.x, point.y);
     });
 
-    interPoints = _.uniq(interPoints, p => `(${p.x}, ${p.y})`);
+    interPoints = _.uniq(interPoints, point => `(${point.x}, ${point.y})`);
 
     if (interPoints.length > 0) return interPoints;
   }
 
-  getPolygonIntersection(p) {
-    return p.getCircleIntersection(this);
+  getPolygonIntersection(point) {
+    return point.getCircleIntersection(this);
   }
 };
