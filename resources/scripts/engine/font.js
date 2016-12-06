@@ -48,11 +48,11 @@ Engine.Font = class Font extends Restorable {
 
     let offset = 0;
 
-    _.map(text, (c, i) => {
-      return this.getCharSprite(c);
+    _.map(text, (char) => {
+      return this.getCharSprite(char);
     })
-    .forEach((charSprite, i) => {
-      let charData = this.data.chars[text.charAt(i)];
+    .forEach((charSprite, index) => {
+      let charData = this.data.chars[text.charAt(index)];
 
       if (noOffsets) {
         charSprite.draw(context, offset);
@@ -94,6 +94,7 @@ Engine.Font = class Font extends Restorable {
     let { x, y, width, height } = this.data.chars[char].rect;
     let canvas = document.createElement("canvas");
     let context = canvas.getContext("2d");
+
     canvas.width = width;
     canvas.height = height;
     context.drawImage(this.atlas, x, y, width, height, 0, 0, width, height);
