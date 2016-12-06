@@ -9,20 +9,16 @@ Engine.Animations.Keyframe = class Keyframe {
     this.lastFrame = this.lastKeyframe.frame;
 
     this.animables = [
-      "x",
-      "y",
-      "width",
-      "height",
-      "opacity"
+      "x", "y", "width", "height", "opacity"
     ];
 
-    this.trimmedKeyframes = this.animables.reduce((trimmedKeyframes, k) => {
-      trimmedKeyframes[k] = keyframes.filter(keyframe => keyframe[k] != null);
+    this.trimmedKeyframes = this.animables.reduce((trimmedKeyframes, key) => {
+      trimmedKeyframes[key] = keyframes.filter(keyframe => keyframe[key] != null);
       return trimmedKeyframes;
     }, {});
 
-    _.each(keyframes[0], (v, k) => {
-      if (this.animables.includes(k)) sprite[k] = v;
+    _.each(keyframes[0], (value, key) => {
+      if (this.animables.includes(key)) sprite[key] = value;
     });
   }
 
@@ -32,14 +28,18 @@ Engine.Animations.Keyframe = class Keyframe {
 
   update(span) {
     if (!this.playing) return;
+
     this.age += span;
 
     switch (this.repMode) {
       case "none":
-        if ((this.frame += span) > this.lastFrame) {
+        this.frame += span;
+
+        if (this.frame > this.lastFrame) {
           this.frame = this.lastFrame;
           this.playing = false;
         }
+
         break;
 
       case "cyclic":
@@ -48,15 +48,16 @@ Engine.Animations.Keyframe = class Keyframe {
 
       case "full":
         this.frame = this.age % this.lastFrame;
-        if ((this.age / this.lastFrame) % 2 >= 1) { this.frame = this.lastFrame - this.frame; }
+        let animationComplete = (this.age / this.lastFrame) % 2 >= 1;
+        if (animationComplete) this.frame = this.lastFrame - this.frame;
         break;
     }
 
-    this.animables.forEach(k => {
-      let motion = this._getKeyframesMo(k);
+    this.animables.forEach(key => {
+      let motion = this.getKeyframeMotion(key);
 
       if (motion)
-        this.sprite[k] = this._calcRelativeVal(motion, k);
+        this.sprite[key] = this.calculateRelativeValue(motion, key);
     });
   }
 
@@ -68,52 +69,46 @@ Engine.Animations.Keyframe = class Keyframe {
     this.playing = false;
   }
 
-  _getKeyframesMo(k) {
-    let keyframes = this.trimmedKeyframes[k];
+  getKeyframeMotion(key) {
+    let keyframes = this.trimmedKeyframes[key];
 
-    if ((keyframes == null) ||
-       keyframes.length < 2 ||
-       this.frame > _(keyframes).last().frame) {
-      return;
-    }
+    if (keyframes == null) return;
+    if (keyframes.length < 2) return;
+    if (this.frame > _.last(keyframes).frame) return;
 
-    let start = this._findStartKeyframe(keyframes);
-    let end = this._findEndKeyframe(keyframes);
-    let ratio = this._getKeyframesRatio(start, end);
+    let start = this.findStartKeyframe(keyframes);
+    let end = this.findEndKeyframe(keyframes);
+    let ratio = this.getKeyframesRatio(start, end);
 
-    return {
-      start,
-      end,
-      ratio
-    };
+    return { start, end, ratio };
   }
 
-  _getKeyframesRatio(start, end) {
+  getKeyframesRatio(start, end) {
     return (this.frame - start.frame) / (end.frame - start.frame);
   }
 
-  _findEndKeyframe(keyframes) {
-    return _.find(keyframes, k => {
-      return k.frame >= (this.frame || 1);
-    });
+  findEndKeyframe(keyframes) {
+    return _.find(keyframes, keyframe =>
+      keyframe.frame >= (this.frame || 1)
+    );
   }
 
-  _findStartKeyframe(keyframes) {
-    let index;
+  findStartKeyframe(keyframes) {
+    let resultIndex;
 
-    keyframes.some((k, i) => {
-      if (k.frame >= (this.frame || 1)) {
-        index = i;
+    keyframes.some((keyframe, currentIndex) => {
+      if (keyframe.frame >= (this.frame || 1)) {
+        resultIndex = currentIndex;
         return true;
       }
     });
 
-    return keyframes[index - 1];
+    return keyframes[resultIndex - 1];
   }
 
-  _calcRelativeVal(motion, k) {
-    let a = motion.start[k];
-    let b = motion.end[k];
+  calculateRelativeValue(motion, key) {
+    let a = motion.start[key];
+    let b = motion.end[key];
     let r = motion.ratio;
     let easing = r > 0 ? motion.start.easing : motion.end.easing;
 
