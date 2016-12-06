@@ -21,7 +21,7 @@ Engine.Game = class Game {
     canvas.addEventListener("keyup", onKeyUp.bind(this), false);
 
     this.assets = {};
-    this.events = new Map;
+    this.events = new Map();
     this.context = canvas.getContext("2d");
     this.bufferedCanvas = document.createElement("canvas");
     this.bufferedContext = this.bufferedCanvas.getContext("2d");
@@ -108,15 +108,15 @@ Engine.Game = class Game {
     this.screen.loading = true;
     let loadsize = 0;
 
-    _.extend(this.screen.assets, this.screen.load(new Engine.AssetsLoader(() => {
-      loadsize++;
-      return () => onload();
-    })));
-
-    var onload = _.after(loadsize, () => {
+    let onload = _.after(loadsize, () => {
       delete this.screen.loading;
       return callback();
     });
+
+    _.extend(this.screen.assets, this.screen.load(new Engine.AssetsLoader(() => {
+      loadsize++;
+      return onload;
+    })));
   }
 
   unloadScreen() {
