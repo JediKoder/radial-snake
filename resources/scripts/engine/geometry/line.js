@@ -36,25 +36,25 @@ Engine.Geometry.Line = class Line {
       return this.getPolygonIntersection(shape);
   }
 
-  getLineIntersection(l) {
-    if (!(((this.x1 - this.x2) * (l.y1 - l.y2)) - ((this.y1 - this.y2) * (l.x1 - l.x2)))) return;
+  getLineIntersection(line) {
+    if (!(((this.x1 - this.x2) * (line.y1 - line.y2)) - ((this.y1 - this.y2) * (line.x1 - line.x2)))) return;
 
-    let x = (((((this.x1 * this.y2) - (this.y1 * this.x2)) * (l.x1 - l.x2)) - ((this.x1 - this.x2) * ((l.x1 * l.y2) - (l.y1 * l.x2)))) /
-        (((this.x1 - this.x2) * (l.y1 - l.y2)) - ((this.y1 - this.y2) * (l.x1 - l.x2)))).trim(9);
-    let y = (((((this.x1 * this.y2) - (this.y1 * this.x2)) * (l.y1 - l.y2)) - ((this.y1 - this.y2) * ((l.x1 * l.y2) - (l.y1 * l.x2)))) /
-        (((this.x1 - this.x2) * (l.y1 - l.y2)) - ((this.y1 - this.y2) * (l.x1 - l.x2)))).trim(9);
+    let x = (((((this.x1 * this.y2) - (this.y1 * this.x2)) * (line.x1 - line.x2)) - ((this.x1 - this.x2) * ((line.x1 * line.y2) - (line.y1 * line.x2)))) /
+        (((this.x1 - this.x2) * (line.y1 - line.y2)) - ((this.y1 - this.y2) * (line.x1 - line.x2)))).trim(9);
+    let y = (((((this.x1 * this.y2) - (this.y1 * this.x2)) * (line.y1 - line.y2)) - ((this.y1 - this.y2) * ((line.x1 * line.y2) - (line.y1 * line.x2)))) /
+        (((this.x1 - this.x2) * (line.y1 - line.y2)) - ((this.y1 - this.y2) * (line.x1 - line.x2)))).trim(9);
 
-    if (x.isBetween(this.x1, this.x2) && x.isBetween(l.x1, l.x2) &&
-       y.isBetween(this.y1, this.y2) && y.isBetween(l.y1, l.y2)) {
+    if (x.isBetween(this.x1, this.x2) && x.isBetween(line.x1, line.x2) &&
+       y.isBetween(this.y1, this.y2) && y.isBetween(line.y1, line.y2)) {
       return { x, y };
     }
   }
 
-  getCircleIntersection(c) {
-    return c.getLineIntersection(this);
+  getCircleIntersection(circle) {
+    return circle.getLineIntersection(this);
   }
 
-  getPolygonIntersection(p) {
-    return p.getLineIntersection(this);
+  getPolygonIntersection(polygon) {
+    return polygon.getLineIntersection(this);
   }
 };
