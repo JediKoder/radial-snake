@@ -8,10 +8,12 @@ const Pages = require("./routes/pages");
 let localIp = IpGrabber.local();
 let port = 8000;
 
+// Initialize a new server
 let server = new Hapi.Server({
   connections: {
     routes: {
       files: {
+        // Served files will be relative to current directory
         relativeTo: __dirname
       }
     }
@@ -20,6 +22,7 @@ let server = new Hapi.Server({
 
 server.connection({ port: process.env.PORT || port });
 
+// Report each response made
 server.ext("onPreResponse", (req, rep) => {
   let res = req.response;
 
@@ -34,14 +37,17 @@ server.ext("onPreResponse", (req, rep) => {
   rep.continue();
 });
 
+// Register all routes and plug-ins
 Async.series([
   next => server.register(Inert, next),
   next => server.register(Endpoints, next),
   next => server.register(Pages, next),
+  // Once registrations are finished, start the server
   next => server.start(next)
 ], (err) => {
   if (err) throw err;
 
+  // Print message once started
   console.log();
   console.log("---------- -------- ------ ---- --");
   console.log("----- ---- --- -- -");

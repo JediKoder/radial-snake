@@ -2,6 +2,7 @@ Game.Screens.Play.Snake = class Snake extends Engine.Layer {
   constructor(screen, snakes = []) {
     super(screen);
 
+    // Red snake
     this.snakes = [
       new Game.Entities.Snake(
         this.width / 4,
@@ -12,13 +13,15 @@ Game.Screens.Play.Snake = class Snake extends Engine.Layer {
         "FireBrick",
         this.keyStates,
         {
+          // Use score from previous matches
           score: snakes[0] && snakes[0].score,
           keys: {
-            left: 37, // left
-            right: 39 // right
+            left: 37, // Left key
+            right: 39 // RIght key
         }
       }),
 
+      // Blue snake
       new Game.Entities.Snake(
         (this.width / 4) * 3,
         (this.height / 4) * 3,
@@ -30,46 +33,54 @@ Game.Screens.Play.Snake = class Snake extends Engine.Layer {
         {
           score: snakes[1] && snakes[1].score,
           keys: {
-            left: 65, // a
-            right: 68 // d
+            left: 65, // 'a' key
+            right: 68 // 'b' key
         }
       })
     ];
 
+    // Show score board for newly created snakes
     screen.appendLayer(Game.Screens.Play.Score, this.snakes);
   }
 
   draw(context) {
+    // Draw each snake in the snakes array
     this.snakes.forEach(snake => snake.draw(context));
   }
 
   update(span) {
     if (!this.snakes.length) return;
 
-    let disqualifiedIndexes = [];
-    let allSnakes = this.snakes.slice();
+    // Storing original snakes array for future use, since it might get changed
+    let snakes = this.snakes.slice();
 
-    this.snakes.forEach((snake, currIndex) => {
+    snakes.forEach((snake, index) => {
       snake.update(span, this.width, this.height);
-      let selfIntersection = snake.getSelfIntersection();
-      if (selfIntersection) disqualifiedIndexes.push(currIndex);
+      // Disqualify if intersected with self
+      if (snake.getSelfIntersection()) return this.snakes.splice(index, 1);
 
-      this.snakes.forEach((rival, rivalIndex) => {
-        if (currIndex == rivalIndex) return;
-        let snakeIntersection = snake.getSnakeIntersection(rival);
-        if (snakeIntersection) disqualifiedIndexes.push(currIndex);
+      snakes.forEach((opponent) => {
+        // Don't scan for intersection with self, obviously this will always be true
+        if (opponent === snake) return;
+        // Disqualify if intersected with opponent
+        if (snake.getSnakeIntersection(opponent)) return this.snakes.splice(index, 1);
       });
     });
 
-    disqualifiedIndexes.forEach(index => this.snakes.splice(index, 1));
+    // There can be only one winner, or a tie (very rare, most likely not to happen)
+    // If the match is already finished, skip the next steps since they are not relevant
+    if (this.snakes.length > 1 || this.matchFinished) return;
 
-    if (this.snakes.length > 1) return;
-    if (this.matchFinished) return;
-
+    // The winner is the "last snake standing"
     let winner = this.snakes[0];
-    this.screen.appendLayer(Game.Screens.Play.Win, allSnakes, winner);
+    // If this is not a tie, increase the winner's score
     if (winner) winner.score++;
 
+    // Show a message saying the result (e.g., "red snake wins")
+    this.screen.appendLayer(Game.Screens.Play.Win, snakes, winner);
+
+    // Store a flag so message won't appear multiple times, otherwise memory is gonna
+    // be wasted despite the fact that we're not going to see any visual difference
     this.matchFinished = true;
   }
 };

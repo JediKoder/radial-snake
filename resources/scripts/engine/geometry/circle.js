@@ -1,9 +1,16 @@
 Engine.Geometry.Circle = class Circle {
+  // x - The x value of the circle's center
+  // y - The y value of the circle's center
+  // r - The radius of the center
+  // rad1 - The first radian of the circle, not necessarily its beginning
+  // rad2 - The second radian of the circle, not necessarily its beginning
   constructor(x, y, r, rad1, rad2) {
     this.x = x.trim(9);
     this.y = y.trim(9);
     this.r = r.trim(9);
 
+    // Trimming mode is done based on which radian represents the ending and which radian
+    // represents the ending
     if (rad1 > rad2) {
       this.rad1 = rad1.trim(9, "floor");
       this.rad2 = rad2.trim(9, "ceil");
@@ -14,31 +21,39 @@ Engine.Geometry.Circle = class Circle {
     }
   }
 
+  // Gets the matching x value for the given radian
   getX(rad) {
     if (!rad.trim(9).isBetween(this.rad1, this.rad2)) return;
     return ((this.r * Math.cos(rad)) + this.x).trim(9);
   }
 
+  // Gets the matching y value for the given radian
   getY(rad) {
     if (!rad.trim(9).isBetween(this.rad1, this.rad2)) return;
     return ((this.r * Math.sin(rad)) + this.y).trim(9);
   }
 
+  // Gets the matching point for the given radian
   getPoint(rad) {
     if (!rad.isBetween(this.rad1, this.rad2)) return;
+
     return {
       x: ((this.r * Math.cos(rad)) + this.x).trim(9),
       y: ((this.r * Math.sin(rad)) + this.y).trim(9)
     };
   }
 
+  // Gets the matching radian for the given point
   getRad(x, y) {
     let rad = Math.atan2(y - this.y, x - this.x);
 
+    // If calculated radian is in circle's radian range, return it
     if (rad != null && rad.isBetween(this.rad1, this.rad2)) {
       return rad;
     }
 
+    // The calculated radian can still be in the circle's radian range in case
+    // they completed several whole circles
     if (Math.abs(this.rad1) > Math.abs(this.rad2)) {
       var cycRad = this.rad1;
     }
@@ -52,6 +67,7 @@ Engine.Geometry.Circle = class Circle {
     }
   }
 
+  // Returns if circle has given points
   hasPoint(x, y) {
     return this.getRad(x, y) != null;
   }
@@ -65,6 +81,7 @@ Engine.Geometry.Circle = class Circle {
       return this.getPolygonIntersection(shape);
   }
 
+  // circle - circle intersection method
   getCircleIntersection(circle) {
     let dx = circle.x - this.x;
     let dy = circle.y - this.y;
@@ -106,6 +123,7 @@ Engine.Geometry.Circle = class Circle {
     if (interPoints.length > 0) return interPoints;
   }
 
+  // circle - line intersection method
   getLineIntersection(line) {
     let x1 = line.x1 - this.x;
     let x2 = line.x2 - this.x;
@@ -143,6 +161,7 @@ Engine.Geometry.Circle = class Circle {
     if (interPoints.length > 0) return interPoints;
   }
 
+  // circle - polygon intersection method
   getPolygonIntersection(polygon) {
     return polygon.getCircleIntersection(this);
   }

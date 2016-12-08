@@ -1,4 +1,5 @@
 Engine.Text = class Text {
+  // An easy representation of a text on a canvas using a custom font
   constructor(text, font) {
     this.text = text;
     this.font = font;
@@ -7,6 +8,7 @@ Engine.Text = class Text {
     this.color = "white";
   }
 
+  // Draws the text
   draw(context, offsetX = 0, offsetY = 0) {
     context.save();
     context.globalAlpha = this.opacity;
@@ -23,6 +25,7 @@ Engine.Text = class Text {
     context.restore();
   }
 
+  // Gets the metrics of the text, based on its content, font, size etc
   getMetrics(context) {
     context.save();
     context.font = this.font;

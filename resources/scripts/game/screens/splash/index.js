@@ -1,10 +1,13 @@
 Game.Screens.Splash = class Splash extends Engine.Screen {
   initialize() {
+    // Create splash sprite and set its properties
     let splashSprite = new Engine.Sprite(this.assets.splashTexture);
     splashSprite.align = "center";
     splashSprite.x = this.width / 2;
 
-    this.splashAnim = new Engine.Animations.Keyframe(splashSprite, [{
+    // Create splash sprite animation
+    this.splashAnim = new Engine.Animations.Keyframe(splashSprite, [
+      {
         y: (this.height / 2) - 30,
         width: splashSprite.width / 4,
         height: splashSprite.height / 4,
@@ -24,19 +27,24 @@ Game.Screens.Splash = class Splash extends Engine.Screen {
       }
     ]);
 
+    // Start playing animation
     this.splashAnim.play();
   }
 
   load(assetsLoader) {
+    // Load assets
     let minecraftiaFont = assetsLoader.font("/fonts/minecraftia");
     let splashTexture = assetsLoader.texture("/textures/splash");
     let logoTexture = assetsLoader.texture("/textures/logo");
 
+    // These are global assets
+    // Note that we load the logo texture now to prevent loading time in the next screen
     this.game.extendAssets({
       minecraftiaFont,
       logoTexture
     });
 
+    // These are local assets which will be disposed along with the screen
     return { splashTexture };
   }
 
@@ -48,6 +56,8 @@ Game.Screens.Splash = class Splash extends Engine.Screen {
     if (this.splashAnim.playing) {
       this.splashAnim.update(span);
     }
+    // If animation is not playing anymore, move on to the next screen
+    // which is the main menu screen
     else {
       this.game.changeScreen(Game.Screens.Menu);
     }

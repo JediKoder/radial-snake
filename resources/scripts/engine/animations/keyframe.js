@@ -8,15 +8,19 @@ Engine.Animations.Keyframe = class Keyframe {
     this.lastKeyframe = _.last(keyframes);
     this.lastFrame = this.lastKeyframe.frame;
 
+    // These are the properties which we can animate
     this.animables = [
       "x", "y", "width", "height", "opacity"
     ];
 
+    // Set a map whose keys represent animable properties and values represent an array
+    // with relevant keyframes to its belonging property
     this.trimmedKeyframes = this.animables.reduce((trimmedKeyframes, key) => {
       trimmedKeyframes[key] = keyframes.filter(keyframe => keyframe[key] != null);
       return trimmedKeyframes;
     }, {});
 
+    // Set initial properties on sprite based on initial keyframe
     _.each(keyframes[0], (value, key) => {
       if (this.animables.includes(key)) sprite[key] = value;
     });
@@ -32,6 +36,7 @@ Engine.Animations.Keyframe = class Keyframe {
     this.age += span;
 
     switch (this.repMode) {
+      // After one cycle animation would stop
       case "none":
         this.frame += span;
 
@@ -42,10 +47,12 @@ Engine.Animations.Keyframe = class Keyframe {
 
         break;
 
+      // Once finished, replay from the beginning
       case "cyclic":
         this.frame = this.age % this.lastFrame;
         break;
 
+      // Once finished, play backwards, and so on
       case "full":
         this.frame = this.age % this.lastFrame;
         let animationComplete = (this.age / this.lastFrame) % 2 >= 1;
@@ -53,6 +60,7 @@ Engine.Animations.Keyframe = class Keyframe {
         break;
     }
 
+    // Update sprite properties based on given keyframe's easing mode
     this.animables.forEach(key => {
       let motion = this.getKeyframeMotion(key);
 
@@ -69,11 +77,15 @@ Engine.Animations.Keyframe = class Keyframe {
     this.playing = false;
   }
 
+  // Gets motion for current refresh
   getKeyframeMotion(key) {
     let keyframes = this.trimmedKeyframes[key];
 
+    // If no keyframes defined, motion is idle
     if (keyframes == null) return;
+    // If there is only one key frame, motion is idle
     if (keyframes.length < 2) return;
+    // If last frame reached, motion is idle
     if (this.frame > _.last(keyframes).frame) return;
 
     let start = this.findStartKeyframe(keyframes);
@@ -83,16 +95,19 @@ Engine.Animations.Keyframe = class Keyframe {
     return { start, end, ratio };
   }
 
+  // Gets the movement ratio
   getKeyframesRatio(start, end) {
     return (this.frame - start.frame) / (end.frame - start.frame);
   }
 
+  // Get property end value based on current frame
   findEndKeyframe(keyframes) {
     return _.find(keyframes, keyframe =>
       keyframe.frame >= (this.frame || 1)
     );
   }
 
+  // Get property start value based on current frame
   findStartKeyframe(keyframes) {
     let resultIndex;
 
@@ -106,6 +121,7 @@ Engine.Animations.Keyframe = class Keyframe {
     return keyframes[resultIndex - 1];
   }
 
+  // Get a recalculated property value relative to provided easing mode
   calculateRelativeValue(motion, key) {
     let a = motion.start[key];
     let b = motion.end[key];

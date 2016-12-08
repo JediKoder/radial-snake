@@ -5,12 +5,13 @@ Game.Screens.Play = class Play extends Engine.Screen {
     }
   }
 
-  initialize() {
-    this.appendLayer(Game.Screens.Play.Ready);
+  // The ready screen will be the initial screen
+  initialize(snakes) {
+    this.appendLayer(Game.Screens.Play.Ready, snakes);
   }
 
   onKeyDown() {
-    // esc
+    // Once escape is pressed, return to main menu screen
     if (this.keyStates.get(27)) {
       this.game.changeScreen(Game.Screens.Menu);
     }

@@ -14,6 +14,8 @@ function register(server, options, next) {
   next();
 }
 
+// Serve game page
+// Should be served to the public on production
 function getGame(req, rep) {
   let path = "./views/game.html";
   let permissions = [];
@@ -21,6 +23,8 @@ function getGame(req, rep) {
   Permitter.file(path, permissions, req, rep);
 }
 
+// Serve test page
+// Should be served to the host on production
 function getSpecRunner(req, rep) {
   let path = "./views/spec_runner.html";
   let permissions = [];

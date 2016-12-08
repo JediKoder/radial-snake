@@ -9,10 +9,12 @@ Game.Screens.Play.Ready = class Ready extends Engine.Layer {
     super(screen);
     this.snakes = snakes;
 
+    // Create "ready" sprite and set its properties
     let readySprite = new Engine.Sprite(this.assets.minecraftiaFont.createTexture("Ready"));
     readySprite.align = "center";
     readySprite.setPercentage("width", this.width, 15, "height");
 
+    // Create fade out animation for "ready" sprite
     this.readyAnim = new Engine.Animations.Keyframe(readySprite, [
       {
         x: this.width / 2,
@@ -38,16 +40,20 @@ Game.Screens.Play.Ready = class Ready extends Engine.Layer {
     if (this.readyAnim.playing) {
       this.readyAnim.update(span);
     }
+    // Once animation is finished, dispose layer
     else {
       this.screen.removeLayer(this);
     }
   }
 
   onKeyDown() {
+    // One time event
     this.disposeEventListeners()
 
+    // This will start playing the animation
     this.ready = true;
     this.readyAnim.play();
+    // Start the game in the background, which will a fluent effect
     this.screen.prependLayer(Game.Screens.Play.Snake, this.snakes);
   }
 };

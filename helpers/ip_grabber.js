@@ -1,5 +1,6 @@
 const Os = require("os");
 
+// Grab local IP address of which the NodeJS process runs on
 function local() {
   let interfaces = Os.networkInterfaces();
   let addresses = [];

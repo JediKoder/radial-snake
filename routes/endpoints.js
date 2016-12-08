@@ -6,6 +6,7 @@ register.attributes = {
 };
 
 function register(server, options, next) {
+  // Scripts endpoint
   server.route({
     method: "GET",
     path: "/scripts/{path*}",
@@ -16,6 +17,7 @@ function register(server, options, next) {
     }
   });
 
+  // Style-sheets endpoint
   server.route({
     method: "GET",
     path: "/styles/{path*}",
@@ -26,6 +28,7 @@ function register(server, options, next) {
     }
   });
 
+  // Libraries endpoint
   server.route({
     method: "GET",
     path: "/libs/{path*}",
@@ -36,6 +39,7 @@ function register(server, options, next) {
     }
   });
 
+  // Images endpoint
   server.route({
     method: "GET",
     path: "/images/{path*}",
@@ -46,6 +50,7 @@ function register(server, options, next) {
     }
   });
 
+  // Textures endpoint
   server.route({
     method: "GET",
     path: "/textures/{path*}",
@@ -56,6 +61,7 @@ function register(server, options, next) {
     }
   });
 
+  // Fonts endpoint
   server.route({
     method: "GET",
     path: "/fonts/{path*}",

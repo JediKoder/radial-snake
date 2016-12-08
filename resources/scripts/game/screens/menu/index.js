@@ -6,15 +6,18 @@ Game.Screens.Menu = class Menu extends Engine.Screen {
   }
 
   initialize() {
+    // Initialize snake logo sprite
     this.logoSprite = new Engine.Sprite(this.assets.logoTexture);
     this.logoSprite.setPercentage("width", this.width, 30, "height");
 
+    // Initialize instructions sprite
     let instructionsSprite = new Engine.Sprite(this.assets.minecraftiaFont.createTexture("Press a key to start"));
     instructionsSprite.align = "center";
     instructionsSprite.setPercentage("width", this.width, 35, "height");
     instructionsSprite.x = this.width / 2;
     instructionsSprite.y = this.height / 2;
 
+    // Create flickering animation for instructions sprite
     this.instructionsAnim = new Engine.Animations.Keyframe(instructionsSprite, [
       {
         opacity: 1,
@@ -26,10 +29,12 @@ Game.Screens.Menu = class Menu extends Engine.Screen {
       }
     ]);
 
+    // Play it repeatedly, back and forth
     this.instructionsAnim.repMode = "full";
     this.instructionsAnim.play();
   }
 
+  // Dispose the logo texture
   unload() {
     return "logoTexture";
   }
@@ -40,14 +45,17 @@ Game.Screens.Menu = class Menu extends Engine.Screen {
   }
 
   update(span) {
+    // On key press, proceed to play screen
     if (this.keyPressed) {
       this.game.changeScreen(Game.Screens.Play);
     }
+    // Else, just update animation
     else {
       this.instructionsAnim.update(span);
     }
   }
 
+  // Register key press
   onKeyDown(e) {
     this.keyPressed = true;
   }

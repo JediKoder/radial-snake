@@ -3,12 +3,15 @@ const Async = require("async");
 const Fs = require("fs");
 const { DOMParser } = require("xmldom");
 
+// Gets a dir path containing font xmls and converts them all to jsons
 function xmlsToJsons(path, callback = _.noop) {
   Fs.readdir(path, (err, files) => {
     if (err) return callback(err);
 
+    // Remove all extensions
     fileNames = _.uniq(files.map(file => file.split(".")[0]));
 
+    // Convert each xml individually
     Async.each(fileNames, (fileName, next) => {
       xmlToJson(`${path}/${fileName}`, next);
     },
@@ -22,29 +25,32 @@ function xmlsToJsons(path, callback = _.noop) {
   });
 }
 
+// Gets a font xml and converts it to json
 function xmlToJson(path, callback = _.noop) {
   Async.waterfall([
     (next) => {
-      Fs.readFile(`${path}.xml`, function(err, xmlBuf) {
+      Fs.readFile(`${path}.xml`, function(err, xmlBuffer) {
         if (err) return next(err);
 
-        let jsonObj = {
+        let json = {
           chars: {}
         };
 
-        let xml = xmlBuf.toString();
+        let xml = xmlBuffer.toString();
         let doc = new DOMParser().parseFromString(xml);
         let fontDoc = doc.getElementsByTagName("Font")[0];
         let charsDoc = fontDoc.getElementsByTagName("Char");
 
+        // Compose meta-data about font like size and family
         _.each(fontDoc.attributes, (attr) => {
-          jsonObj[attr.name] = parseInt(attr.value) || attr.value;
+          json[attr.name] = parseInt(attr.value) || attr.value;
         });
 
+        // Compose data about each character in font
         _.each(charsDoc, (charDoc) => {
           let charCode = charDoc.getAttribute("code");
 
-          let char = jsonObj.chars[charCode] = {
+          let char = json.chars[charCode] = {
             rect: rect = {},
             offset: offset = {},
             width: parseInt(charDoc.getAttribute("width"))
@@ -64,6 +70,7 @@ function xmlToJson(path, callback = _.noop) {
       });
     },
     (json, next) => {
+      // Once finished, write json into file
       Fs.writeFile(path + ".json", json, (err) => {
         next(err);
       });
@@ -77,6 +84,8 @@ function xmlToJson(path, callback = _.noop) {
   });
 };
 
+// Converts an string of numbers to array of numbers
+// e.g. extractIntegers("1 2 3") -> [1, 2, 3]
 function extractIntegers(srcstr) {
   return srcstr.split(" ").map((substr) => parseInt(substr));
 }
