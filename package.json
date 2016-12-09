@@ -6,6 +6,10 @@
     "type": "git",
     "url": "https://DAB0mB@github.com/DAB0mB/radial-snake.git"
   },
+  "scripts": {
+    "build": "node helpers/font_parser.js",
+    "serve": "npm run build && nodemon server.js"
+  },
   "dependencies": {
     "async": "^2.1.4",
     "boom": "^4.2.0",
@@ -16,13 +20,9 @@
     "xmldom": "^0.1.24"
   },
   "devDependencies": {
-    "coffee-script": "^1.11.1",
     "nodemon": "^1.11.0"
   },
   "engines": {
     "node": ">=0.10.25"
-  },
-  "scripts": {
-    "start": "node app.js"
   }
 }

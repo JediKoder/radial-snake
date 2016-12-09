@@ -1,7 +1,13 @@
 const _ = require("underscore");
 const Async = require("async");
 const Fs = require("fs");
+const Path = require("path");
 const { DOMParser } = require("xmldom");
+
+if (module === require.main) {
+  let fonstDir = Path.resolve(__dirname, "../resources/assets/fonts");
+  xmlsToJsons(fonstDir, err => { if (err) throw err });
+}
 
 // Gets a dir path containing font xmls and converts them all to jsons
 function xmlsToJsons(path, callback = _.noop) {
@@ -66,7 +72,7 @@ function xmlToJson(path, callback = _.noop) {
           [offset.x, offset.y] = extractIntegers(charDoc.getAttribute("offset"));
         });
 
-        next(null, JSON.stringify(jsonObj, null, 2));
+        next(null, JSON.stringify(json, null, 2));
       });
     },
     (json, next) => {
